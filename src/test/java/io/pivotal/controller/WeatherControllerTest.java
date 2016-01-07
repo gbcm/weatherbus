@@ -3,6 +3,7 @@ package io.pivotal.controller;
 import io.pivotal.TestUtilities;
 import io.pivotal.service.WeatherService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,9 +11,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.NestedServletException;
 import retrofit.RetrofitError;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
+import java.net.UnknownServiceException;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.Mockito.when;
@@ -43,16 +47,9 @@ public class WeatherControllerTest {
                 json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/ExpectedTempRender.json")));
     }
 
-    @Test
-    public void testRenderTempFailure() throws Exception {
-        when(weatherService.getTemp(47.6097, -122.3331)).thenReturn(null);
-        mockMvc.perform(get("/")).andExpect(
-                json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/ExpectedTempRender.json")));
-    }
-
-    @Test
+    @Test(expected=ServletException.class)
     public void testRenderTempNetworkFailure() throws Exception {
         when(weatherService.getTemp(47.6097, -122.3331)).thenThrow(RetrofitError.networkError("Whateva", new IOException()));
-        mockMvc.perform(get("/")).andExpect();
+        mockMvc.perform(get("/"));
     }
 }

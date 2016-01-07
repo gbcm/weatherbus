@@ -21,7 +21,9 @@ public class WeatherService {
 
     public double getTemp(double latitude, double longitude) throws UnknownServiceException {
         try {
-            return getWundergroundService().getConditionsResponse(Double.toString(latitude), Double.toString(longitude)).getTempF();
+            return getWundergroundService()
+                    .getConditionsResponse(Double.toString(latitude), Double.toString(longitude))
+                    .getTempF();
         }
         catch (RetrofitError e) {
             e.printStackTrace();

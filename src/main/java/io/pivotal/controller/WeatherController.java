@@ -21,7 +21,7 @@ public class WeatherController {
 
     @RequestMapping("/")
     public @ResponseBody String renderTemp() throws UnknownServiceException {
-        return new TemperaturePresenter(47.6097, -122.3331, weatherService.getTemp(47.6097, -122.3331)).toString();
+        return new TemperaturePresenter(47.6097, -122.3331, weatherService.getTemp(47.6097, -122.3331)).toJson();
     }
 
 }

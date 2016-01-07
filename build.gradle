@@ -29,8 +29,9 @@ repositories {
 
 dependencies {
 	compile('com.squareup.retrofit:retrofit:1.9.0')
-	compile 'com.squareup.okhttp:okhttp:2.5.0'
+	compile('com.squareup.okhttp:okhttp:2.5.0')
 	compile('com.google.code.gson:gson:2.3.1')
+	compile('com.cedarsoftware:json-io:4.3.0')
 	compile('org.projectlombok:lombok:1.16.6')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
