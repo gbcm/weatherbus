@@ -4,6 +4,7 @@ import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -17,13 +18,9 @@ import retrofit.mime.TypedByteArray;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by pivotal on 1/6/16.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class WeatherServiceTest {
     @Mock
@@ -38,7 +35,10 @@ public class WeatherServiceTest {
         double latitude = 45.23;
         double longitude = -160.56;
 
-        when(mockClient.execute(any(Request.class)))
+        String url = String.format("%s/api/%s/conditions/q/%s,%s.json", Constants.WUNDERGROUND_ENDPOINT, Constants.WUNDERGROUND_API_KEY, latitude, longitude);
+        ArgumentMatcher<Request> matchesRequestUrl = new TestUtilities.RequestWithUrl(url);
+
+        when(mockClient.execute(argThat(matchesRequestUrl)))
                 .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST, new TypedByteArray("application/json",
                         TestUtilities.jsonFileToString("src/test/resources/input/CurrentTemp.json").getBytes())));
         ReflectionTestUtils.setField(subject, "client", mockClient);
@@ -51,7 +51,10 @@ public class WeatherServiceTest {
         double latitude = 45.23;
         double longitude = -160.56;
 
-        when(mockClient.execute(any(Request.class)))
+        String url = String.format("%s/api/%s/hourly/q/%s,%s.json", Constants.WUNDERGROUND_ENDPOINT, Constants.WUNDERGROUND_API_KEY, latitude, longitude);
+        ArgumentMatcher<Request> matchesRequestUrl = new TestUtilities.RequestWithUrl(url);
+
+        when(mockClient.execute(argThat(matchesRequestUrl)))
                 .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST, new TypedByteArray("application/json",
                         TestUtilities.jsonFileToString("src/test/resources/input/FutureTemp.json").getBytes())));
 
