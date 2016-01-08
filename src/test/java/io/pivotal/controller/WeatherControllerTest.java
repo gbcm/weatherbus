@@ -17,6 +17,8 @@ import retrofit.RetrofitError;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.net.UnknownServiceException;
+import java.util.Date;
+import java.util.HashMap;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.Mockito.when;
@@ -41,15 +43,27 @@ public class WeatherControllerTest {
     }
 
     @Test
-    public void testRenderTemp() throws Exception {
-        when(weatherService.getTemp(47.6097, -122.3331)).thenReturn(36.2);
+    public void testGetCurrentTemp() throws Exception {
+        when(weatherService.getCurrentTemp(47.6097, -122.3331)).thenReturn(36.2);
         mockMvc.perform(get("/")).andExpect(
-                json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/ExpectedTempRender.json")));
+                json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/CurrentTemp.json")));
+    }
+
+    @Test
+    public void testGetFutureTemp() throws Exception {
+        HashMap<Date, Double> values = new HashMap<Date, Double>() {{
+            put(new Date(1452222000L), 14.4);
+            put(new Date(1452225600L), 15.5);
+        }};
+
+        when(weatherService.getFutureTemp(47.6097, -122.3331)).thenReturn(values);
+        mockMvc.perform(get("/forecast")).andExpect(
+                json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/FutureTemp.json")));
     }
 
     @Test(expected=ServletException.class)
-    public void testRenderTempNetworkFailure() throws Exception {
-        when(weatherService.getTemp(47.6097, -122.3331)).thenThrow(RetrofitError.networkError("Whateva", new IOException()));
+    public void testGetCurrentTempNetworkFailure() throws Exception {
+        when(weatherService.getCurrentTemp(47.6097, -122.3331)).thenThrow(RetrofitError.networkError("Whateva", new IOException()));
         mockMvc.perform(get("/"));
     }
 }

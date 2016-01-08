@@ -14,9 +14,10 @@ import retrofit.client.Request;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-import java.util.Collections;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -33,15 +34,35 @@ public class WeatherServiceTest {
     WeatherService subject;
 
     @Test
-    public void testGetTemp() throws Exception {
+    public void testGetCurrentTemp() throws Exception {
         double latitude = 45.23;
         double longitude = -160.56;
-        String request = String.format("%s/api/%s/conditions/q/%s,%s.json", Constants.WUNDERGROUND_ENDPOINT, Constants.WUNDERGROUND_API_KEY, latitude, longitude);
+
         when(mockClient.execute(any(Request.class)))
-                .thenReturn(new Response(request, 200, "", Collections.EMPTY_LIST, new TypedByteArray("application/json",
-                        TestUtilities.jsonFileToString("src/test/resources/TestForecast.json").getBytes())));
+                .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST, new TypedByteArray("application/json",
+                        TestUtilities.jsonFileToString("src/test/resources/input/CurrentTemp.json").getBytes())));
         ReflectionTestUtils.setField(subject, "client", mockClient);
 
-        assertEquals(51.4, subject.getTemp(latitude, longitude), 0);
+        assertEquals(51.4, subject.getCurrentTemp(latitude, longitude), 0);
+    }
+
+    @Test
+    public void testGetFutureTemp() throws Exception {
+        double latitude = 45.23;
+        double longitude = -160.56;
+
+        when(mockClient.execute(any(Request.class)))
+                .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST, new TypedByteArray("application/json",
+                        TestUtilities.jsonFileToString("src/test/resources/input/FutureTemp.json").getBytes())));
+
+        ReflectionTestUtils.setField(subject, "client", mockClient);
+
+        Map<Date, Double> expectedTemperatures = new HashMap<Date, Double>() {{
+            put(new Date(1452211200L), 43.0);
+            put(new Date(1452214800L), 42.0);
+            put(new Date(1452218400L), 41.0);
+        }};
+
+        assertEquals(expectedTemperatures, subject.getFutureTemp(latitude, longitude));
     }
 }

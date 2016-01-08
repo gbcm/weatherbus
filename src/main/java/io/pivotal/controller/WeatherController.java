@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.UnknownServiceException;
 
@@ -20,8 +21,16 @@ public class WeatherController {
     WeatherService weatherService;
 
     @RequestMapping("/")
-    public @ResponseBody String renderTemp() throws UnknownServiceException {
-        return new TemperaturePresenter(47.6097, -122.3331, weatherService.getTemp(47.6097, -122.3331)).toJson();
+    public @ResponseBody String getCurrentTemp() throws UnknownServiceException {
+        return renderTemp(weatherService.getCurrentTemp(47.6097, -122.3331));
     }
 
+    @RequestMapping("/forecast")
+    public @ResponseBody String getFutureTemp() throws UnknownServiceException {
+        throw new NotImplementedException();
+    }
+
+    private String renderTemp(double temp) {
+        return new TemperaturePresenter(47.6097, -122.3331, temp).toJson();
+    }
 }
