@@ -44,8 +44,8 @@ public class WeatherControllerTest {
 
     @Test
     public void testGetCurrentTemp() throws Exception {
-        when(weatherService.getCurrentTemp(47.6097, -122.3331)).thenReturn(36.2);
-        mockMvc.perform(get("/")).andExpect(
+        when(weatherService.getCurrentTemp(47.6098, -122.3332)).thenReturn(36.2);
+        mockMvc.perform(get("/?lat=47.6098&lng=-122.3332")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/CurrentTemp.json")));
     }
 
@@ -64,6 +64,6 @@ public class WeatherControllerTest {
     @Test(expected=ServletException.class)
     public void testGetCurrentTempNetworkFailure() throws Exception {
         when(weatherService.getCurrentTemp(47.6097, -122.3331)).thenThrow(RetrofitError.networkError("Whateva", new IOException()));
-        mockMvc.perform(get("/"));
+        mockMvc.perform(get("/?lat=47.6097&lng=-122.3331"));
     }
 }

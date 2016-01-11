@@ -26,8 +26,8 @@ public class WeatherController {
     WeatherService weatherService;
 
     @RequestMapping("/")
-    public @ResponseBody String getCurrentTemp() throws UnknownServiceException {
-        return renderTemp(weatherService.getCurrentTemp(47.6097, -122.3331));
+    public @ResponseBody String getCurrentTemp(@RequestParam double lat, @RequestParam double lng) throws UnknownServiceException {
+        return new TemperaturePresenter(lat, lng, weatherService.getCurrentTemp(lat, lng)).toJson();
     }
 
     @RequestMapping("/forecast")
@@ -41,10 +41,5 @@ public class WeatherController {
             forecasts.add(new ForecastPresenter.Forecast(kvp.getKey().getTime(), kvp.getValue()));
         }
         return new ForecastPresenter(lat, lng, forecasts).toJson();
-    }
-
-
-    private String renderTemp(double temp) {
-        return new TemperaturePresenter(47.6097, -122.3331, temp).toJson();
     }
 }
