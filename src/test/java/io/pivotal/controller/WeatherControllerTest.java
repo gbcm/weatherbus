@@ -56,8 +56,8 @@ public class WeatherControllerTest {
             put(new Date(1452225600L), 15.5);
         }};
 
-        when(weatherService.getFutureTemp(47.6097, -122.3331)).thenReturn(values);
-        mockMvc.perform(get("/forecast")).andExpect(
+        when(weatherService.getFutureTemp(47.6098, -122.3332)).thenReturn(values);
+        mockMvc.perform(get("/forecast?lat=47.6098&lng=-122.3332")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/FutureTemp.json")));
     }
 
