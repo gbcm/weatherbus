@@ -34,6 +34,8 @@ dependencies {
 	compile('com.cedarsoftware:json-io:4.3.0')
 	compile('org.projectlombok:lombok:1.16.6')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.postgresql:postgresql:9.3-1101-jdbc41')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('net.javacrumbs.json-unit:json-unit:1.8.0')
 	testCompile('net.javacrumbs.json-unit:json-unit-spring:1.8.0')
