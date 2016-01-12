@@ -24,13 +24,36 @@ public class UserController {
     String getStops(@RequestParam String username) throws Exception {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            return "No user found";
+            return "User not found";
         }
         String message = "Stops for " + username + ":<br/>";
         for (String stopId : user.getStopIds()) {
             message += "Stop: " + stopId + "<br/>";
         }
         return message;
+    }
+
+    @RequestMapping("addUser")
+    public @ResponseBody
+    String addUser(@RequestParam String username) throws Exception {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return "User: " + username + " already exists";
+        }
+        userRepository.save(new User(username));
+        return "User: " + username + " added.";
+    }
+
+    @RequestMapping("addStop")
+    public @ResponseBody
+    String addStop(@RequestParam String username, @RequestParam String stopId) throws Exception {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return "User not found";
+        }
+        user.getStopIds().add(stopId);
+        userRepository.save(user);
+        return "Stop " + stopId + " added!";
     }
 }
 
