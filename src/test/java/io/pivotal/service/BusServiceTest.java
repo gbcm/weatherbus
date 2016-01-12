@@ -2,6 +2,7 @@ package io.pivotal.service;
 
 import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
+import io.pivotal.model.Coordinate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -50,6 +51,27 @@ public class BusServiceTest {
         }};
 
         assertEquals(expectedDepartures, subject.getDeparturesForStop("12345"));
+        verify(mockClient).execute(argThat(matchesRequestUrl));
+    }
+
+    @Test
+    public void testGetCoordinatesForStop() throws Exception {
+        String url = String.format("%s/api/where/stop/1_75403.json?key=%s",
+                Constants.ONEBUSAWAY_ENDPOINT, Constants.ONEBUSAWAY_KEY);
+        ArgumentMatcher<Request> matchesRequestUrl = new TestUtilities.RequestWithUrl(url);
+
+        when(mockClient.execute(argThat(matchesRequestUrl)))
+                .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST,
+                        new TypedByteArray("application/json",
+                                TestUtilities.jsonFileToString("src/test/resources/input/StopInfo.json").getBytes())));
+        ReflectionTestUtils.setField(subject, "client", mockClient);
+
+        Coordinate expectedCoordinate = new Coordinate(47.654365, -122.305214);
+        Coordinate coordinate = subject.getCoordinatesForStop("1_75403");
+
+        assertEquals(expectedCoordinate.getLatitude(), coordinate.getLatitude(), 0);
+        assertEquals(expectedCoordinate.getLongitude(), coordinate.getLongitude(), 0);
+
         verify(mockClient).execute(argThat(matchesRequestUrl));
     }
 }

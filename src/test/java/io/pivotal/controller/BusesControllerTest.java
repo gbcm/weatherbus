@@ -1,6 +1,7 @@
 package io.pivotal.controller;
 
 import io.pivotal.TestUtilities;
+import io.pivotal.model.Coordinate;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
 import org.junit.Before;
@@ -45,5 +46,15 @@ public class BusesControllerTest {
         mockMvc.perform(get("/buses/departures?stopId=35")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/DeparturesForStop.json")));
+    }
+
+    @Test
+    public void testGetCoordinates() throws Exception {
+        Coordinate coordinate = new Coordinate(47.654365, -122.305214);
+
+        when(busService.getCoordinatesForStop("1_75403")).thenReturn(coordinate);
+        mockMvc.perform(get("/buses/coordinates?stopId=1_75403")).andExpect(
+                json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/StopCoordinates.json")));
     }
 }
