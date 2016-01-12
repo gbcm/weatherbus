@@ -1,6 +1,7 @@
 package io.pivotal.controller;
 
 import io.pivotal.TestUtilities;
+import io.pivotal.model.Coordinate;
 import io.pivotal.service.WeatherService;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class WeatherControllerTest {
 
     @Test
     public void testGetCurrentTemp() throws Exception {
-        when(weatherService.getCurrentTemp(47.6098, -122.3332)).thenReturn(36.2);
+        when(weatherService.getCurrentTemp(new Coordinate(47.6098, -122.3332))).thenReturn(36.2);
         mockMvc.perform(get("/?lat=47.6098&lng=-122.3332")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/CurrentTemp.json")));
     }
@@ -61,14 +62,15 @@ public class WeatherControllerTest {
             put(new Date(1452225600L), 15.5);
         }};
 
-        when(weatherService.getFutureTemp(47.6098, -122.3332)).thenReturn(values);
+        when(weatherService.getFutureTemp(new Coordinate(47.6098, -122.3332))).thenReturn(values);
         mockMvc.perform(get("/forecast?lat=47.6098&lng=-122.3332")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/FutureTemp.json")));
     }
 
     @Test(expected = ServletException.class)
     public void testGetCurrentTempNetworkFailure() throws Exception {
-        when(weatherService.getCurrentTemp(47.6097, -122.3331)).thenThrow(RetrofitError.networkError("Whateva", new IOException()));
+        when(weatherService.getCurrentTemp(new Coordinate(47.6097, -122.3331))).
+                thenThrow(RetrofitError.networkError("Whateva", new IOException()));
         mockMvc.perform(get("/?lat=47.6097&lng=-122.3331"));
     }
 

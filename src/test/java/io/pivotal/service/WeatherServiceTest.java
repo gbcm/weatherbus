@@ -2,6 +2,7 @@ package io.pivotal.service;
 
 import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
+import io.pivotal.model.Coordinate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -43,7 +44,7 @@ public class WeatherServiceTest {
                         TestUtilities.jsonFileToString("src/test/resources/input/CurrentTemp.json").getBytes())));
         ReflectionTestUtils.setField(subject, "client", mockClient);
 
-        assertEquals(51.4, subject.getCurrentTemp(latitude, longitude), 0);
+        assertEquals(51.4, subject.getCurrentTemp(new Coordinate(latitude, longitude)), 0);
     }
 
     @Test
@@ -66,6 +67,6 @@ public class WeatherServiceTest {
             put(new Date(1452218400L), 41.0);
         }};
 
-        assertEquals(expectedTemperatures, subject.getFutureTemp(latitude, longitude));
+        assertEquals(expectedTemperatures, subject.getFutureTemp(new Coordinate(latitude, longitude)));
     }
 }

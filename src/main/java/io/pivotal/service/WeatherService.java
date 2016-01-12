@@ -1,6 +1,7 @@
 package io.pivotal.service;
 
 import io.pivotal.Constants;
+import io.pivotal.model.Coordinate;
 import org.springframework.stereotype.Component;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -21,10 +22,11 @@ public class WeatherService {
     OkClient client = new OkClient();
     IWundergroundService service = null;
 
-    public double getCurrentTemp(double latitude, double longitude) throws UnknownServiceException {
+    public double getCurrentTemp(Coordinate coordinate) throws UnknownServiceException {
         try {
             return getWundergroundService()
-                    .getConditionsResponse(Double.toString(latitude), Double.toString(longitude))
+                    .getConditionsResponse(Double.toString(coordinate.getLatitude()),
+                                            Double.toString(coordinate.getLongitude()))
                     .getTempF();
         }
         catch (RetrofitError e) {
@@ -33,10 +35,11 @@ public class WeatherService {
         }
     }
 
-    public Map<Date, Double> getFutureTemp(double latitude, double longitude) throws UnknownServiceException {
+    public Map<Date, Double> getFutureTemp(Coordinate coordinate) throws UnknownServiceException {
         try {
             return getWundergroundService()
-                    .getForecastResponse(Double.toString(latitude), Double.toString(longitude))
+                    .getForecastResponse(Double.toString(coordinate.getLatitude()),
+                                        Double.toString(coordinate.getLongitude()))
                     .getTemps();
         } catch (RetrofitError e) {
             e.printStackTrace();
