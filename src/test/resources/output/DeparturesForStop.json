@@ -1,20 +1,20 @@
 [
   {
-    "predictedDepartureTime": 1452550769000,
+    "predictedTime": 1452550769000,
     "routeShortName": "31",
-    "scheduledDepartureTime": 1452550571000,
-    "tripHeadsign": "CENTRAL MAGNOLIA FREMONT"
+    "scheduledTime": 1452550571000,
+    "headsign": "CENTRAL MAGNOLIA FREMONT"
   },
   {
-    "predictedDepartureTime": 0,
+    "predictedTime": 0,
     "routeShortName": "855",
-    "scheduledDepartureTime": 1452551256000,
-    "tripHeadsign": "Lynnwood"
+    "scheduledTime": 1452551256000,
+    "headsign": "Lynnwood"
   },
   {
-    "predictedDepartureTime": 0,
+    "predictedTime": 0,
     "routeShortName": "32",
-    "scheduledDepartureTime": 1452554291000,
-    "tripHeadsign": "SEATTLE CENTER FREMONT"
+    "scheduledTime": 1452554291000,
+    "headsign": "SEATTLE CENTER FREMONT"
   }
 ]

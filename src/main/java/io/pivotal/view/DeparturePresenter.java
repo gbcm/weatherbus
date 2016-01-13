@@ -6,14 +6,14 @@ import lombok.Data;
 @Data
 public class DeparturePresenter extends JsonPresenter {
     private String routeShortName;
-    private String tripHeadsign;
-    private long predictedDepartureTime;
-    private long scheduledDepartureTime;
+    private String headsign;
+    private long predictedTime;
+    private long scheduledTime;
 
     public DeparturePresenter(Departure departure) {
         routeShortName = departure.getRouteShortName();
-        tripHeadsign = departure.getHeadsign();
-        predictedDepartureTime = departure.getPredictedTime();
-        scheduledDepartureTime = departure.getScheduledTime();
+        headsign = departure.getHeadsign();
+        predictedTime = departure.getPredictedTime();
+        scheduledTime = departure.getScheduledTime();
     }
 }
