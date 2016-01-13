@@ -1,0 +1,28 @@
+{
+  "latitude": 47.654365,
+  "longitude": -122.305214,
+  "stopId": "1_75403",
+  "departures": [
+    {
+      "predictedTime": 1452550769000,
+      "routeShortName": "31",
+      "scheduledTime": 1452550571000,
+      "temp": 14.4,
+      "headsign": "CENTRAL MAGNOLIA FREMONT"
+    },
+    {
+      "predictedTime": 0,
+      "routeShortName": "855",
+      "scheduledTime": 1452551256000,
+      "temp": 14.4,
+      "headsign": "Lynnwood"
+    },
+    {
+      "predictedTime": 0,
+      "routeShortName": "32",
+      "scheduledTime": 1452554291000,
+      "temp": 15.5,
+      "headsign": "SEATTLE CENTER FREMONT"
+    }
+  ]
+}
