@@ -12,12 +12,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -29,9 +32,14 @@ public class BusesControllerTest {
     BusesController subject;
     private MockMvc mockMvc;
 
+    @Mock
+    HandlerExceptionResolver handlerExceptionResolver;
+
     @Before
     public void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(subject).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(subject)
+                .setHandlerExceptionResolvers(handlerExceptionResolver)
+                .build();
     }
 
     @Test
@@ -56,5 +64,14 @@ public class BusesControllerTest {
         mockMvc.perform(get("/buses/coordinates?stopId=1_75403")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/StopCoordinates.json")));
+    }
+
+    @Test(expected = MissingServletRequestParameterException.class)
+    public void testGetDeparturesWithOutParams() throws Throwable {
+        try {
+            mockMvc.perform(get("/buses/departures"));
+        } finally {
+            verifyNoMoreInteractions(busService);
+        }
     }
 }

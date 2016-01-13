@@ -7,7 +7,6 @@ import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.http.GET;
 import retrofit.http.Path;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.UnknownServiceException;
 import java.util.Date;
