@@ -39,4 +39,11 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     public @ResponseBody String errorRetrofitConfig() {
         return new ErrorPresenter(ErrorMessages.RETROFIT.getErrorMessage()).toJson();
     }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @RequestMapping(ErrorPathConstants.ERROR_USER_NOT_FOUND_PATH)
+    public @ResponseBody String errorUserNotFound() {
+        return new ErrorPresenter(ErrorMessages.USER_NOT_FOUND.getErrorMessage()).toJson();
+    }
 }

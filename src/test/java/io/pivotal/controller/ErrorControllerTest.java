@@ -62,4 +62,12 @@ public class ErrorControllerTest {
                 .andExpect(
                         json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/RetrofitError.json")));
     }
+
+    @Test
+    public void testUserNotFoundError() throws Exception {
+        mockMvc.perform(get(ErrorPathConstants.ERROR_USER_NOT_FOUND_PATH))
+                .andExpect(status().isNotFound())
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/UserNotFoundError.json")));
+    }
 }

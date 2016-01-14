@@ -2,13 +2,20 @@ package io.pivotal.controller;
 
 import io.pivotal.domain.User;
 import io.pivotal.domain.UserRepository;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
+import io.pivotal.errorHandling.ErrorMessages;
+import io.pivotal.errorHandling.ErrorPathConstants;
+import io.pivotal.errorHandling.ErrorPresenter;
+import io.pivotal.errorHandling.UserNotFoundException;
+import io.pivotal.view.JsonListPresenter;
+import io.pivotal.view.JsonPresenter;
+import io.pivotal.view.StopPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pivotal on 1/12/16.
@@ -24,13 +31,15 @@ public class UserController {
     String getStops(@RequestParam String username) throws Exception {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            return "User not found";
+            throw new UserNotFoundException();
         }
-        String message = "Stops for " + username + ":<br/>";
+
+        List<JsonPresenter> presenters = new ArrayList<>();
         for (String stopId : user.getStopIds()) {
-            message += "Stop: " + stopId + "<br/>";
+            presenters.add(new StopPresenter(stopId));
         }
-        return message;
+
+        return new JsonListPresenter(presenters).toJson();
     }
 
     @RequestMapping("addUser")
@@ -55,5 +64,7 @@ public class UserController {
         userRepository.save(user);
         return "Stop " + stopId + " added!";
     }
+
+
 }
 
