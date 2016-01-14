@@ -2,6 +2,7 @@ package io.pivotal.service;
 
 import io.pivotal.Constants;
 import io.pivotal.model.Coordinate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -19,12 +20,12 @@ import java.util.Map;
 @Component
 public class WeatherService {
 
-    OkClient client = new OkClient();
-    IWundergroundService service = null;
+    @Autowired
+    IWundergroundService service;
 
     public double getCurrentTemp(Coordinate coordinate) throws UnknownServiceException {
         try {
-            return getWundergroundService()
+            return service
                     .getConditionsResponse(Double.toString(coordinate.getLatitude()),
                                             Double.toString(coordinate.getLongitude()))
                     .getTempF();
@@ -37,7 +38,7 @@ public class WeatherService {
 
     public Map<Date, Double> getFutureTemp(Coordinate coordinate) throws UnknownServiceException {
         try {
-            return getWundergroundService()
+            return service
                     .getForecastResponse(Double.toString(coordinate.getLatitude()),
                                         Double.toString(coordinate.getLongitude()))
                     .getTemps();
@@ -45,24 +46,5 @@ public class WeatherService {
             e.printStackTrace();
             throw new UnknownServiceException(e.getMessage());
         }
-    }
-
-    private IWundergroundService getWundergroundService() {
-        if (service == null) {
-            RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(Constants.WUNDERGROUND_ENDPOINT);
-
-            builder.setClient(client);
-            RestAdapter adapter = builder.build();
-            service = adapter.create(IWundergroundService.class);
-        }
-        return service;
-    }
-
-    private interface IWundergroundService {
-        @GET("/api/" + Constants.WUNDERGROUND_API_KEY + "/conditions/q/{latitude},{longitude}.json")
-        WeatherConditionsResponse getConditionsResponse(@Path("latitude") String latitude, @Path("longitude") String longitude);
-
-        @GET("/api/" + Constants.WUNDERGROUND_API_KEY + "/hourly/q/{latitude},{longitude}.json")
-        WeatherForecastResponse getForecastResponse(@Path("latitude") String latitude, @Path("longitude") String longitude);
     }
 }

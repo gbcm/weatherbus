@@ -13,7 +13,7 @@ public class WeatherConditionsResponse {
     }
 
     @Data
-    public class CurrentObservation {
+    public static class CurrentObservation {
         @SerializedName("temp_f")
         private double tempF;
     }
