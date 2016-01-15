@@ -1,6 +1,6 @@
 #!/bin/bash
 
 export TERM=xterm
-pushd ..
+pushd $1
 ./gradlew build
 popd
