@@ -46,4 +46,11 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     public @ResponseBody String errorUserNotFound() {
         return new ErrorPresenter(ErrorMessages.USER_NOT_FOUND.getErrorMessage()).toJson();
     }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @RequestMapping(ErrorPathConstants.USER_ALREADY_EXISTS_PATH)
+    public @ResponseBody String userAlreadyExists() {
+        return new ErrorPresenter(ErrorMessages.USER_ALREADY_EXISTS.getErrorMessage()).toJson();
+    }
 }
