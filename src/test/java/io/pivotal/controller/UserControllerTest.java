@@ -105,7 +105,7 @@ public class UserControllerTest {
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/UserCreateSuccess.json")));
     }
-    
+
     @Test(expected = UserAlreadyExistsException.class)
     public void testAddUserAlreadyExists() throws Throwable {
         when(userRepository.findByUsername("Test")).thenReturn(testUser);
@@ -121,6 +121,24 @@ public class UserControllerTest {
 
     @Test
     public void testAddStop() throws Exception {
+        when(userRepository.findByUsername("Test")).thenReturn(testUser);
 
+        mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"stopId\":\"12_B\"}"))
+                .andExpect(status().isOk());
+        Mockito.verify(userRepository, times(1)).save(testUser);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void testAddStopUserNotFound() throws Throwable {
+        when(userRepository.findByUsername("Test")).thenReturn(null);
+        try {
+            mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"stopId\":\"12_B\"}"));
+        } catch (NestedServletException e) {
+            throw e.getCause();
+        } finally {
+            Mockito.verify(userRepository, times(0)).save(any(User.class));
+        }
     }
 }

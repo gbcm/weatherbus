@@ -47,15 +47,18 @@ public class UserController {
         return new UserMessagePresenter(saved).toJson();
     }
 
-    @RequestMapping("addStop")
-    public @ResponseBody String addStop(@RequestParam String username, @RequestParam String stopId) throws Exception {
+    @RequestMapping(value = "{username}/stops", method = RequestMethod.POST)
+    public @ResponseBody String addStop(
+            @PathVariable("username")  String username,
+            @RequestBody String stopId) throws Exception {
+
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            return "User not found";
+            throw new UserNotFoundException();
         }
         user.getStopIds().add(stopId);
         userRepository.save(user);
-        return "Stop " + stopId + " added!";
+        return "";
     }
 }
 
