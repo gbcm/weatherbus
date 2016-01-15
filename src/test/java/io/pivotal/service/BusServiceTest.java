@@ -1,30 +1,18 @@
 package io.pivotal.service;
 
 import com.google.gson.Gson;
-import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.util.ReflectionTestUtils;
-import retrofit.client.OkClient;
-import retrofit.client.Request;
 import org.mockito.runners.MockitoJUnitRunner;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,7 +29,7 @@ public class BusServiceTest {
         final String stopId = "12345";
 
         ArrivalsAndDeparturesForStopResponse response = gson.fromJson(
-                new FileReader("src/test/resources/input/DeparturesForStop.json"),
+                TestUtilities.fixtureReader("DeparturesForStop"),
                 ArrivalsAndDeparturesForStopResponse.class);
         when(mockService.getDeparturesForStop(stopId)).thenReturn(response);
 
@@ -59,7 +47,7 @@ public class BusServiceTest {
         final String stopId = "1_75403";
 
         StopResponse stopResponse = gson.fromJson(
-                new FileReader("src/test/resources/input/StopInfo.json"),
+                TestUtilities.fixtureReader("StopInfo"),
                 StopResponse.class);
         when(mockService.getCoordinatesForStop(stopId)).thenReturn(stopResponse);
 

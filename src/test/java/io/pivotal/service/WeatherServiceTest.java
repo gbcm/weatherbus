@@ -1,27 +1,19 @@
 package io.pivotal.service;
 
 import com.google.gson.Gson;
-import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.RestTemplate;
-import retrofit.client.OkClient;
-import retrofit.client.Request;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
-import java.io.FileReader;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,7 +31,7 @@ public class WeatherServiceTest {
         Double longitude = -160.56;
 
         WeatherConditionsResponse response = gson.fromJson(
-                new FileReader("src/test/resources/input/CurrentTemp.json"),
+                TestUtilities.fixtureReader("CurrentTemp"),
                 WeatherConditionsResponse.class);
 
         when(mockService.getConditionsResponse(
@@ -51,12 +43,11 @@ public class WeatherServiceTest {
 
     @Test
     public void testGetFutureTemp() throws Exception {
-
         Double latitude = 45.23;
         Double longitude = -160.56;
 
         WeatherForecastResponse response = gson.fromJson(
-                new FileReader("src/test/resources/input/FutureTemp.json"),
+                TestUtilities.fixtureReader("FutureTemp"),
                 WeatherForecastResponse.class);
 
         when(mockService.getForecastResponse(
