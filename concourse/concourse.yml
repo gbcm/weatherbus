@@ -1,0 +1,13 @@
+resources:
+- name: weatherbus-source
+  type: git
+  source:
+    uri: https://github.com/gbcm/weatherbus.git
+    branch: master
+jobs:
+- name: weatherbus
+  plan:
+  - get: weatherbus-source
+    trigger: true
+  - task:
+    file: weatherbus-source/build.yml
