@@ -36,4 +36,16 @@ public class BusService {
             throw new UnknownServiceException(e.getMessage());
         }
     }
+
+    public String getStopName(String stopId) throws UnknownServiceException {
+        try {
+            StopResponse response = service
+                    .getCoordinatesForStop(stopId);
+            return response.getData().getEntry().getName();
+        }
+        catch (RetrofitError e) {
+            e.printStackTrace();
+            throw new UnknownServiceException(e.getMessage());
+        }
+    }
 }

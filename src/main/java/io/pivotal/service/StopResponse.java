@@ -28,4 +28,7 @@ class StopEntry {
 
     @SerializedName("lon")
     double longitude;
+
+    @SerializedName("name")
+    String name;
 }

@@ -57,4 +57,16 @@ public class BusServiceTest {
         assertEquals(expectedCoordinate.getLatitude(), coordinate.getLatitude(), 0);
         assertEquals(expectedCoordinate.getLongitude(), coordinate.getLongitude(), 0);
     }
+
+    @Test
+    public void testGetStopName() throws Exception {
+        final String stopId = "1_75403";
+
+        StopResponse stopResponse = gson.fromJson(
+                TestUtilities.fixtureReader("StopInfo"),
+                StopResponse.class);
+        when(mockService.getCoordinatesForStop(stopId)).thenReturn(stopResponse);
+
+        assertEquals(subject.getStopName(stopId), "Stevens Way & Benton Ln");
+    }
 }
