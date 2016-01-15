@@ -1,5 +1,6 @@
 package io.pivotal.service;
 
+import com.google.gson.Gson;
 import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
@@ -16,6 +17,7 @@ import retrofit.client.Request;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import java.io.FileReader;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -25,42 +27,41 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WeatherServiceTest {
     @Mock
-    RestTemplate restTemplate = new RestTemplate();
-    @Mock
-    OkClient mockClient;
+    IWundergroundService mockService;
     @InjectMocks
     WeatherService subject;
 
+    Gson gson = new Gson();
+
     @Test
     public void testGetCurrentTemp() throws Exception {
-        double latitude = 45.23;
-        double longitude = -160.56;
+        Double latitude = 45.23;
+        Double longitude = -160.56;
 
-        String url = String.format("%s/api/%s/conditions/q/%s,%s.json", Constants.WUNDERGROUND_ENDPOINT, Constants.WUNDERGROUND_API_KEY, latitude, longitude);
-        ArgumentMatcher<Request> matchesRequestUrl = new TestUtilities.RequestWithUrl(url);
+        WeatherConditionsResponse response = gson.fromJson(
+                new FileReader("src/test/resources/input/CurrentTemp.json"),
+                WeatherConditionsResponse.class);
 
-        when(mockClient.execute(argThat(matchesRequestUrl)))
-                .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST, new TypedByteArray("application/json",
-                        TestUtilities.jsonFileToString("src/test/resources/input/CurrentTemp.json").getBytes())));
-        ReflectionTestUtils.setField(subject, "client", mockClient);
+        when(mockService.getConditionsResponse(
+                latitude.toString(),
+                longitude.toString())).thenReturn(response);
 
         assertEquals(51.4, subject.getCurrentTemp(new Coordinate(latitude, longitude)), 0);
     }
 
     @Test
     public void testGetFutureTemp() throws Exception {
-        double latitude = 45.23;
-        double longitude = -160.56;
 
-        String url = String.format("%s/api/%s/hourly/q/%s,%s.json", Constants.WUNDERGROUND_ENDPOINT, Constants.WUNDERGROUND_API_KEY, latitude, longitude);
-        ArgumentMatcher<Request> matchesRequestUrl = new TestUtilities.RequestWithUrl(url);
+        Double latitude = 45.23;
+        Double longitude = -160.56;
 
-        when(mockClient.execute(argThat(matchesRequestUrl)))
-                .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST, new TypedByteArray("application/json",
-                        TestUtilities.jsonFileToString("src/test/resources/input/FutureTemp.json").getBytes())));
+        WeatherForecastResponse response = gson.fromJson(
+                new FileReader("src/test/resources/input/FutureTemp.json"),
+                WeatherForecastResponse.class);
 
-        ReflectionTestUtils.setField(subject, "client", mockClient);
-
+        when(mockService.getForecastResponse(
+                latitude.toString(),
+                longitude.toString())).thenReturn(response);
         Map<Date, Double> expectedTemperatures = new HashMap<Date, Double>() {{
             put(new Date(1452211200L), 43.0);
             put(new Date(1452214800L), 42.0);

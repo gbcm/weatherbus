@@ -1,8 +1,10 @@
 package io.pivotal.service;
 
+import com.google.gson.Gson;
 import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -15,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,22 +30,20 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BusServiceTest {
     @Mock
-    OkClient mockClient;
+    IOneBusAwayService mockService;
     @InjectMocks
     BusService subject;
 
+    Gson gson = new Gson();
+
     @Test
     public void testGetDeparturesForStop() throws Exception {
-        String url = String.format("%s/api/where/arrivals-and-departures-for-stop/12345.json" +
-                "?key=%s&minutesBefore=15&minutesAfter=45", Constants.ONEBUSAWAY_ENDPOINT,
-                Constants.ONEBUSAWAY_KEY);
-        ArgumentMatcher<Request> matchesRequestUrl = new TestUtilities.RequestWithUrl(url);
+        final String stopId = "12345";
 
-        when(mockClient.execute(argThat(matchesRequestUrl)))
-                .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST,
-                        new TypedByteArray("application/json",
-                                TestUtilities.jsonFileToString("src/test/resources/input/DeparturesForStop.json").getBytes())));
-        ReflectionTestUtils.setField(subject, "client", mockClient);
+        ArrivalsAndDeparturesForStopResponse response = gson.fromJson(
+                new FileReader("src/test/resources/input/DeparturesForStop.json"),
+                ArrivalsAndDeparturesForStopResponse.class);
+        when(mockService.getDeparturesForStop(stopId)).thenReturn(response);
 
         List<Departure> expectedDepartures = new ArrayList<Departure>() {{
             add(new Departure("31", "CENTRAL MAGNOLIA FREMONT", 1452550769000L, 1452550571000L));
@@ -51,27 +52,21 @@ public class BusServiceTest {
         }};
 
         assertEquals(expectedDepartures, subject.getDeparturesForStop("12345"));
-        verify(mockClient).execute(argThat(matchesRequestUrl));
     }
 
     @Test
     public void testGetCoordinatesForStop() throws Exception {
-        String url = String.format("%s/api/where/stop/1_75403.json?key=%s",
-                Constants.ONEBUSAWAY_ENDPOINT, Constants.ONEBUSAWAY_KEY);
-        ArgumentMatcher<Request> matchesRequestUrl = new TestUtilities.RequestWithUrl(url);
+        final String stopId = "1_75403";
 
-        when(mockClient.execute(argThat(matchesRequestUrl)))
-                .thenReturn(new Response("", 200, "", Collections.EMPTY_LIST,
-                        new TypedByteArray("application/json",
-                                TestUtilities.jsonFileToString("src/test/resources/input/StopInfo.json").getBytes())));
-        ReflectionTestUtils.setField(subject, "client", mockClient);
+        StopResponse stopResponse = gson.fromJson(
+                new FileReader("src/test/resources/input/StopInfo.json"),
+                StopResponse.class);
+        when(mockService.getCoordinatesForStop(stopId)).thenReturn(stopResponse);
 
         Coordinate expectedCoordinate = new Coordinate(47.654365, -122.305214);
-        Coordinate coordinate = subject.getCoordinatesForStop("1_75403");
+        Coordinate coordinate = subject.getCoordinatesForStop(stopId);
 
         assertEquals(expectedCoordinate.getLatitude(), coordinate.getLatitude(), 0);
         assertEquals(expectedCoordinate.getLongitude(), coordinate.getLongitude(), 0);
-
-        verify(mockClient).execute(argThat(matchesRequestUrl));
     }
 }
