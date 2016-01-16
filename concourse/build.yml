@@ -8,7 +8,4 @@ run:
   args: ["build", "-pweatherbus-source"]
 params:
   "TERM": "xterm"
-outputs:
-- name: jar
-  path: "weatherbus-source/build/libs/weatherbus-0.0.1-SNAPSHOT.jar"
 

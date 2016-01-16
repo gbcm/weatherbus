@@ -9,5 +9,5 @@ jobs:
   plan:
   - get: weatherbus-source
     trigger: true
-  - task:
-    file: weatherbus-source/build.yml
+  - task: build
+    file: weatherbus-source/concourse/build.yml
