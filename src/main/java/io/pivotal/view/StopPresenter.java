@@ -1,5 +1,6 @@
 package io.pivotal.view;
 
+import io.pivotal.domain.BusStop;
 import lombok.Data;
 import lombok.ToString;
 
@@ -10,8 +11,10 @@ import lombok.ToString;
 @ToString
 public class StopPresenter extends JsonPresenter {
     private final String id;
+    private final String name;
 
-    public StopPresenter(String id) {
-        this.id = id;
+    public StopPresenter(BusStop stop) {
+        this.id = stop.getApiId();
+        this.name = stop.getName();
     }
 }

@@ -1,12 +1,13 @@
 package io.pivotal.controller;
 
 import io.pivotal.TestUtilities;
+import io.pivotal.domain.BusStop;
+import io.pivotal.domain.BusStopRepository;
 import io.pivotal.domain.User;
 import io.pivotal.domain.UserRepository;
 import io.pivotal.errorHandling.UserAlreadyExistsException;
 import io.pivotal.errorHandling.UserNotFoundException;
 import io.pivotal.service.BusService;
-import io.pivotal.service.Departure;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,18 +22,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.util.NestedServletException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.mock.staticmock.AnnotationDrivenStaticEntityMockingControl.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +40,12 @@ public class UserControllerTest {
     @Mock
     UserRepository userRepository;
     @Mock
+    BusStopRepository busStopRepository;
+    @Mock
+    BusService busService;
+    @Mock
     User testUser;
+
     @InjectMocks
     UserController subject;
     private MockMvc mockMvc;
@@ -63,8 +62,12 @@ public class UserControllerTest {
 
     @Test
     public void testGetStops() throws Exception {
-        when(testUser.getStopIds()).thenReturn(
-                new HashSet<>(Arrays.asList("12_A", "16_C", "12_A_J_56")));
+        when(testUser.getStops()).thenReturn(
+                new HashSet<>(Arrays.asList(
+                        new BusStop("twelve a", "12_A"),
+                        new BusStop("sixteen c", "16_C"),
+                        new BusStop("another bus stop name", "12_A_J_56")
+                )));
 
         when(userRepository.findByUsername("Test")).thenReturn(testUser);
         mockMvc.perform(get("/users/stops?username=Test"))
@@ -95,22 +98,17 @@ public class UserControllerTest {
     @Test
     public void testAddUser() throws Exception {
         when(userRepository.findByUsername("Test")).thenReturn(null);
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(testUser.getUsername()).thenReturn("Test");
-        when(testUser.getId()).thenReturn(1L);
 
-        mockMvc.perform(post("/users/create").contentType(MediaType.TEXT_PLAIN)
+        mockMvc.perform(post("/users/").contentType(MediaType.TEXT_PLAIN)
                 .content("Test"))
-                .andExpect(status().isOk())
-                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/output/UserCreateSuccess.json")));
+                .andExpect(status().isOk());
     }
 
     @Test(expected = UserAlreadyExistsException.class)
     public void testAddUserAlreadyExists() throws Throwable {
         when(userRepository.findByUsername("Test")).thenReturn(testUser);
         try {
-            mockMvc.perform(post("/users/create").contentType(MediaType.TEXT_PLAIN)
+            mockMvc.perform(post("/users/").contentType(MediaType.TEXT_PLAIN)
                     .content("Test"));
         } catch (NestedServletException e) {
             throw e.getCause();
@@ -120,13 +118,43 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testAddStop() throws Exception {
+    public void testAddNewStop() throws Exception {
         when(userRepository.findByUsername("Test")).thenReturn(testUser);
+        when(busStopRepository.findByApiId("12_B")).thenReturn(null);
+        when(busService.getStopName("12_B")).thenReturn("twelve bee");
 
         mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
                 .content("{\"stopId\":\"12_B\"}"))
                 .andExpect(status().isOk());
         Mockito.verify(userRepository, times(1)).save(testUser);
+        Mockito.verify(busStopRepository, times(1)).save(any(BusStop.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNewStopInvalidJson() throws Throwable {
+        try {
+            mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"stoopid\":\"12_B\"}"));
+        } catch (NestedServletException e) {
+            throw e.getCause();
+        } finally {
+            verifyNoMoreInteractions(busService);
+            verifyNoMoreInteractions(busStopRepository);
+            verifyNoMoreInteractions(userRepository);
+        }
+    }
+
+    @Test
+    public void testAddExistingStop() throws Exception {
+        when(userRepository.findByUsername("Test")).thenReturn(testUser);
+        BusStop busStop = new BusStop("Thirteen see", "13_C");
+        when(busStopRepository.findByApiId("13_C")).thenReturn(busStop);
+
+        mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"stopId\":\"13_C\"}"))
+                .andExpect(status().isOk());
+        Mockito.verify(userRepository, times(1)).save(testUser);
+        Mockito.verify(busStopRepository, times(0)).save(any(BusStop.class));
     }
 
     @Test(expected = UserNotFoundException.class)

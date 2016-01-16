@@ -1,11 +1,11 @@
 [
   {
-    "id": "12_A"
+    "id": "12_A", "name": "twelve a"
   },
   {
-    "id": "16_C"
+    "id": "12_A_J_56", "name": "another bus stop name"
   },
   {
-    "id": "12_A_J_56"
+    "id": "16_C", "name": "sixteen c"
   }
 ]
