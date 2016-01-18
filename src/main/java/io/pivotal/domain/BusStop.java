@@ -19,8 +19,8 @@ public class BusStop {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy="stops")
-    private Set<User> users;
+    public BusStop() {
+    }
 
     public BusStop(String name, String apiId) {
         this.name = name;

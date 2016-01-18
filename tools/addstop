@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 username stopid" 1>&2
+  exit 1
+fi
+
+curl -H "Content-Type: application/json" -X POST -d "{\"stopId\": \"$2\"}" "http://localhost:8080/users/$1/stops"
