@@ -7,11 +7,18 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import retrofit.RetrofitError;
 
+import javax.servlet.http.HttpServletResponse;
+
 @ControllerAdvice
 public class ErrorController implements org.springframework.boot.autoconfigure.web.ErrorController {
     @Override
     public String getErrorPath() {
         return ErrorPathConstants.ERROR_PATH;
+    }
+
+    @ModelAttribute
+    public void setVaryResponseHeader(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
