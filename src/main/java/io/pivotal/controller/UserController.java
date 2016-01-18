@@ -62,10 +62,10 @@ public class UserController {
     public
     @ResponseBody
     String addUser(@RequestBody String usernameJson) throws Exception {
-        Map<String,String> mapOfJson = gson.fromJson(usernameJson, HashMap.class);
+        Map<String, String> mapOfJson = gson.fromJson(usernameJson, HashMap.class);
         String nameOfParam = "username";
 
-        if (!mapOfJson.containsKey(nameOfParam)){
+        if (!mapOfJson.containsKey(nameOfParam)) {
             throw new IllegalArgumentException();
         }
         String username = mapOfJson.get(nameOfParam);
@@ -81,13 +81,15 @@ public class UserController {
     @RequestMapping(
             value = "{username}/stops",
             method = RequestMethod.POST)
-    public @ResponseBody String addStop(
+    public
+    @ResponseBody
+    String addStop(
             @PathVariable("username") String username,
             @RequestBody String stopIdJson) throws Exception {
-        Map<String,String> mapOfJson = gson.fromJson(stopIdJson, HashMap.class);
+        Map<String, String> mapOfJson = gson.fromJson(stopIdJson, HashMap.class);
         String nameOfParam = "stopId";
 
-        if (!mapOfJson.containsKey(nameOfParam)){
+        if (!mapOfJson.containsKey(nameOfParam)) {
             throw new IllegalArgumentException();
         }
         String stopId = mapOfJson.get(nameOfParam);
