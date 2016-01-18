@@ -34,11 +34,6 @@ public class UserController {
 
     Gson gson = new Gson();
 
-    @ModelAttribute
-    public void setVaryResponseHeader(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-    }
-
     @RequestMapping("stops")
     public
     @ResponseBody
