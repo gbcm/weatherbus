@@ -1,5 +1,6 @@
 package io.pivotal.errorHandling;
 
+import com.google.gson.JsonSyntaxException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -52,5 +53,12 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     @RequestMapping(ErrorPathConstants.USER_ALREADY_EXISTS_PATH)
     public @ResponseBody String userAlreadyExists() {
         return new ErrorPresenter(ErrorMessages.USER_ALREADY_EXISTS.getErrorMessage()).toJson();
+    }
+
+    @ExceptionHandler({JsonSyntaxException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @RequestMapping(ErrorPathConstants.JSON_SYNTAX_ERROR_PATH)
+    public @ResponseBody String badJson() {
+        return new ErrorPresenter(ErrorMessages.BAD_JSON.getErrorMessage()).toJson();
     }
 }

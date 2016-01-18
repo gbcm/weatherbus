@@ -1,5 +1,6 @@
 package io.pivotal.controller;
 
+import com.google.gson.JsonSyntaxException;
 import io.pivotal.TestUtilities;
 import io.pivotal.domain.BusStop;
 import io.pivotal.domain.BusStopRepository;
@@ -11,6 +12,7 @@ import io.pivotal.service.BusService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -99,21 +101,46 @@ public class UserControllerTest {
     public void testAddUser() throws Exception {
         when(userRepository.findByUsername("Test")).thenReturn(null);
 
-        mockMvc.perform(post("/users/").contentType(MediaType.TEXT_PLAIN)
-                .content("Test"))
+        mockMvc.perform(post("/users/").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"Test\"}"))
                 .andExpect(status().isOk());
+        Mockito.verify(userRepository, times(1)).save(argThat(new isUserWithUserName("Test")));
     }
 
     @Test(expected = UserAlreadyExistsException.class)
     public void testAddUserAlreadyExists() throws Throwable {
         when(userRepository.findByUsername("Test")).thenReturn(testUser);
         try {
-            mockMvc.perform(post("/users/").contentType(MediaType.TEXT_PLAIN)
-                    .content("Test"));
+            mockMvc.perform(post("/users/").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"username\":\"Test\"}"));
         } catch (NestedServletException e) {
             throw e.getCause();
         } finally {
             Mockito.verify(userRepository, times(0)).save(any(User.class));
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddUserMissingUsername() throws Throwable {
+        try {
+            mockMvc.perform(post("/users/").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"stoopid\":\"12_B\"}"));
+        } catch (NestedServletException e) {
+            throw e.getCause();
+        } finally {
+            verifyNoMoreInteractions(userRepository);
+        }
+    }
+
+    @Test(expected = JsonSyntaxException.class)
+    public void testAddUserInvalidJson() throws Throwable {
+        try {
+            mockMvc.perform(post("/users/").contentType(MediaType.APPLICATION_JSON)
+                    .content("\"stoopid\":\"12_B\"}"));
+        } catch (NestedServletException e) {
+            throw e.getCause();
+        } finally {
+            verifyNoMoreInteractions(userRepository);
         }
     }
 
@@ -131,10 +158,24 @@ public class UserControllerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testAddNewStopInvalidJson() throws Throwable {
+    public void testAddNewStopMissingStopId() throws Throwable {
         try {
             mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
                     .content("{\"stoopid\":\"12_B\"}"));
+        } catch (NestedServletException e) {
+            throw e.getCause();
+        } finally {
+            verifyNoMoreInteractions(busService);
+            verifyNoMoreInteractions(busStopRepository);
+            verifyNoMoreInteractions(userRepository);
+        }
+    }
+
+    @Test(expected = JsonSyntaxException.class)
+    public void testAddNewStopInvalidJson() throws Throwable {
+        try {
+            mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"stoopid\":\"12_B\""));
         } catch (NestedServletException e) {
             throw e.getCause();
         } finally {
@@ -167,6 +208,22 @@ public class UserControllerTest {
             throw e.getCause();
         } finally {
             Mockito.verify(userRepository, times(0)).save(any(User.class));
+        }
+    }
+
+    private class isUserWithUserName extends ArgumentMatcher<User> {
+        private final String expectedUsername;
+
+        public isUserWithUserName(String username) {
+            expectedUsername = username;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (!(argument instanceof User)) {
+                return false;
+            }
+            return ((User)argument).getUsername().equals(expectedUsername);
         }
     }
 }

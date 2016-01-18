@@ -55,7 +55,15 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public
     @ResponseBody
-    String addUser(@RequestBody String username) throws Exception {
+    String addUser(@RequestBody String usernameJson) throws Exception {
+        Map<String,String> mapOfJson = gson.fromJson(usernameJson, HashMap.class);
+        String nameOfParam = "username";
+
+        if (!mapOfJson.containsKey(nameOfParam)){
+            throw new IllegalArgumentException();
+        }
+        String username = mapOfJson.get(nameOfParam);
+
         User user = userRepository.findByUsername(username);
         if (user != null) {
             throw new UserAlreadyExistsException();

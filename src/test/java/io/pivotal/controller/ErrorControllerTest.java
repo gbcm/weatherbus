@@ -78,4 +78,12 @@ public class ErrorControllerTest {
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/UserAlreadyExistsError.json")));
     }
+
+    @Test
+    public void testBadJsonError() throws Exception {
+        mockMvc.perform(get(ErrorPathConstants.JSON_SYNTAX_ERROR_PATH))
+                .andExpect(status().isBadRequest())
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/BadJsonError.json")));
+    }
 }
