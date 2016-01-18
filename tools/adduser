@@ -5,4 +5,4 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-curl -X POST -d "$1" http://localhost:8080/users
+curl -H "Content-Type: application/json" -X POST -d "{\"username\": \"$1\"}" http://localhost:8080/users
