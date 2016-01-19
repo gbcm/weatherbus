@@ -10,7 +10,7 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 @Configuration
-@Profile("default")
+@Profile({ "default", "cloud" })
 public class WeatherbusConfig {
     @Bean
     public IOneBusAwayService getOneBusAwayService() {
