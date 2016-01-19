@@ -1,5 +1,6 @@
 package io.pivotal.service;
 
+import io.pivotal.domain.BusStop;
 import io.pivotal.model.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

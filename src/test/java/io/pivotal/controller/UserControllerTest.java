@@ -146,15 +146,19 @@ public class UserControllerTest {
 
     @Test
     public void testAddNewStop() throws Exception {
+        String expectedApiId = "12_B";
+        String expectedName = "twelve bee";
         when(userRepository.findByUsername("Test")).thenReturn(testUser);
-        when(busStopRepository.findByApiId("12_B")).thenReturn(null);
-        when(busService.getStopName("12_B")).thenReturn("twelve bee");
+        when(busStopRepository.findByApiId(expectedApiId)).thenReturn(null);
+        when(busService.getStopName(expectedApiId)).thenReturn(expectedName);
 
         mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
                 .content("{\"stopId\":\"12_B\"}"))
                 .andExpect(status().isOk());
+        Mockito.verify(busService, times(1)).getStopName(expectedApiId);
         Mockito.verify(userRepository, times(1)).save(testUser);
-        Mockito.verify(busStopRepository, times(1)).save(any(BusStop.class));
+        Mockito.verify(busStopRepository, times(1)).save(argThat(
+                new isStopWithApiIdAndName(expectedApiId, expectedName)));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -224,6 +228,25 @@ public class UserControllerTest {
                 return false;
             }
             return ((User)argument).getUsername().equals(expectedUsername);
+        }
+    }
+
+    private class isStopWithApiIdAndName extends ArgumentMatcher<BusStop> {
+        private final String expectedApiId;
+        private final String expectedName;
+
+        public isStopWithApiIdAndName(String expectedApiId, String expectedName) {
+            this.expectedApiId = expectedApiId;
+            this.expectedName = expectedName;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (!(argument instanceof BusStop)) {
+                return false;
+            }
+            return ((BusStop)argument).getApiId().equals(expectedApiId) &&
+                    ((BusStop)argument).getName().equals(expectedName);
         }
     }
 }

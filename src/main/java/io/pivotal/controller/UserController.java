@@ -7,6 +7,7 @@ import io.pivotal.domain.User;
 import io.pivotal.domain.UserRepository;
 import io.pivotal.errorHandling.UserAlreadyExistsException;
 import io.pivotal.errorHandling.UserNotFoundException;
+import io.pivotal.service.BusService;
 import io.pivotal.view.JsonListPresenter;
 import io.pivotal.view.JsonPresenter;
 import io.pivotal.view.StopPresenter;
@@ -31,6 +32,9 @@ public class UserController {
 
     @Autowired
     BusStopRepository busStopRepository;
+
+    @Autowired
+    BusService busService;
 
     Gson gson = new Gson();
 
@@ -94,7 +98,9 @@ public class UserController {
         }
         BusStop stop = busStopRepository.findByApiId(stopId);
         if (stop == null) {
-            stop = new BusStop("TODO: set a name here", stopId);
+            stop = new BusStop(
+                    busService.getStopName(stopId),
+                    stopId);
             busStopRepository.save(stop);
         }
         user.getStops().add(stop);
