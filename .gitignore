@@ -2,3 +2,5 @@ build
 *.iml
 .gradle/
 .idea/
+artifacts
+*.swp
