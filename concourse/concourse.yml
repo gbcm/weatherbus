@@ -23,5 +23,5 @@ jobs:
   - put: weatherbus-cf
     params:
       manifest: weatherbus-source/manifest.yml
-      path: build/artifacts
+      path: build
 
