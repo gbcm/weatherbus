@@ -55,3 +55,8 @@ eclipse {
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.9'
 }
+
+task copyJar(type: Copy) {
+	from jar
+	into "artifacts"
+}

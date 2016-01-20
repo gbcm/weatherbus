@@ -4,6 +4,15 @@ resources:
   source:
     uri: https://github.com/gbcm/weatherbus.git
     branch: master
+- name: weatherbus-cf
+  type: cf
+  source:
+    api: https://api.run.pivotal.io
+    username: {{cf-username}}
+    password: {{cf-password}}
+    organization: employeeDemo
+    space: development
+
 jobs:
 - name: weatherbus
   plan:
@@ -11,3 +20,7 @@ jobs:
     trigger: true
   - task: build
     file: weatherbus-source/concourse/build.yml
+  - put: weatherbus-cf
+    params:
+      manifest: weatherbus-source/manifest.yml
+

@@ -2,7 +2,10 @@
 platform: linux
 image: "docker:///java#8"
 inputs:
-- name: weatherbus-source
+  - name: weatherbus-source
+outputs:
+  - name: weatherbus-artifacts
+    path: artifacts
 run:
   path: "weatherbus-source/gradlew"
   args: ["build", "-pweatherbus-source"]
