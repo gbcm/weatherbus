@@ -5,7 +5,7 @@ inputs:
   - name: weatherbus-source
 outputs:
   - name: weatherbus-artifacts
-    path: weatherbus-source/artifacts
+    path: artifacts
 run:
   path: "weatherbus-source/gradlew"
   args: ["build", "-pweatherbus-source"]
