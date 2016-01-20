@@ -8,7 +8,7 @@ outputs:
     path: artifacts
 run:
   path: "weatherbus-source/gradlew"
-  args: ["build", "-pweatherbus-source"]
+  args: ["copyJar", "-pweatherbus-source"]
 params:
   "TERM": "xterm"
 
