@@ -6,9 +6,9 @@ import retrofit.http.GET;
 import retrofit.http.Query;
 
 public interface IWeatherService {
-    @GET("api/temp")
+    @GET("/temp")
     TemperatureResponse getTemperature(@Query("lat") double lat, @Query("lng") double lng);
 
-    @GET("api/forecast")
+    @GET("/forecast")
     ForecastResponse getForecast(@Query("lat") double lat, @Query("lng") double lng);
 }
