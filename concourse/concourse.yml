@@ -15,7 +15,7 @@ resources:
     api: https://api.run.pivotal.io
     username: {{cf-username}}
     password: {{cf-password}}
-    organization: employeeDemo
+    organization: seattle-beach
     space: development
 
 jobs:
@@ -39,3 +39,4 @@ jobs:
     params:
       manifest: weatherbus-disco-source/manifest.yml
       path: build/disco-0.0.1-SNAPSHOT.jar
+
