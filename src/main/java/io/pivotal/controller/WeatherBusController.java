@@ -5,6 +5,7 @@ import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
+import io.pivotal.service.IWeatherService;
 import io.pivotal.view.WeatherBusPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,15 +22,15 @@ public class WeatherBusController {
     @Autowired
     private BusService busService;
 
-//    @Autowired
-//    private WeatherService weatherService;
+    @Autowired
+    private IWeatherService weatherService;
 
     @RequestMapping("")
     public @ResponseBody String getWeatherBus(@RequestParam String stopId) throws Exception {
         List<Departure> departures = busService.getDeparturesForStop(stopId);
         Coordinate coordinate = busService.getCoordinatesForStop(stopId);
 //        SortedMap<Date, Double> forecast = new TreeMap<>(weatherService.getFutureTemp(coordinate));
-//        Map.Entry<Date, Double> tempNow = new AbstractMap.SimpleEntry<>(Date.from(Instant.now()), weatherService.getCurrentTemp(coordinate));
+        Map.Entry<Date, Double> tempNow = new AbstractMap.SimpleEntry<>(Date.from(Instant.now()), weatherService.getCurrentTemp(coordinate.getLatitude(), coordinate.getLongitude()));
 
         List<DepartureWithTemperature> dwt = new ArrayList<>();
 
