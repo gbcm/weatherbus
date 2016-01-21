@@ -2,10 +2,8 @@ package io.pivotal.controller;
 
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
-import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
-import io.pivotal.service.WeatherService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +16,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.*;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -26,8 +23,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class WeatherBusControllerTest {
     @Mock
     BusService busService;
-    @Mock
-    WeatherService weatherService;
+//    @Mock
+//    WeatherService weatherService;
     @InjectMocks
     WeatherBusController subject;
 
@@ -56,7 +53,7 @@ public class WeatherBusControllerTest {
 
         when(busService.getDeparturesForStop(stopId)).thenReturn(departures);
         when(busService.getCoordinatesForStop(stopId)).thenReturn(coordinate);
-        when(weatherService.getFutureTemp(coordinate)).thenReturn(futureTemps);
+//        when(weatherService.getFutureTemp(coordinate)).thenReturn(futureTemps);
 
         mockMvc.perform(get("/wb?stopId=" + stopId)).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(

@@ -24,18 +24,18 @@ public class TestConfig {
         };
     }
 
-    @Bean
-    public IWundergroundService getWundergroundService() {
-        return new IWundergroundService() {
-            @Override
-            public WeatherConditionsResponse getConditionsResponse(@Path("latitude") String latitude, @Path("longitude") String longitude) {
-                return new WeatherConditionsResponseBuilder().build();
-            }
-
-            @Override
-            public WeatherForecastResponse getForecastResponse(@Path("latitude") String latitude, @Path("longitude") String longitude) {
-                return null;
-            }
-        };
-    }
+//    @Bean
+//    public IWundergroundService getWundergroundService() {
+//        return new IWundergroundService() {
+//            @Override
+//            public WeatherConditionsResponse getConditionsResponse(@Path("latitude") String latitude, @Path("longitude") String longitude) {
+//                return new WeatherConditionsResponseBuilder().build();
+//            }
+//
+//            @Override
+//            public WeatherForecastResponse getForecastResponse(@Path("latitude") String latitude, @Path("longitude") String longitude) {
+//                return null;
+//            }
+//        };
+//    }
 }

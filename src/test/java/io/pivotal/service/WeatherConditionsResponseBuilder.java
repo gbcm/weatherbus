@@ -5,14 +5,14 @@ package io.pivotal.service;
  */
 public class WeatherConditionsResponseBuilder {
 
-    public WeatherConditionsResponse build() {
-
-        WeatherConditionsResponse.CurrentObservation observation = new WeatherConditionsResponse.CurrentObservation();
-        observation.setTempF(36.2);
-
-        WeatherConditionsResponse response = new WeatherConditionsResponse();
-        response.setCurrentObservation(observation);
-
-        return response;
-    }
+//    public WeatherConditionsResponse build() {
+//
+//        WeatherConditionsResponse.CurrentObservation observation = new WeatherConditionsResponse.CurrentObservation();
+//        observation.setTempF(36.2);
+//
+//        WeatherConditionsResponse response = new WeatherConditionsResponse();
+//        response.setCurrentObservation(observation);
+//
+//        return response;
+//    }
 }
