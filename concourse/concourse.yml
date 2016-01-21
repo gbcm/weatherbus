@@ -10,7 +10,7 @@ resources:
     api: https://api.run.pivotal.io
     username: {{cf-username}}
     password: {{cf-password}}
-    organization: employeeDemo
+    organization: seattle-beach
     space: development
 
 jobs:

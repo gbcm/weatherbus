@@ -4,3 +4,4 @@ build
 .idea/
 artifacts
 *.swp
+.DS_Store
