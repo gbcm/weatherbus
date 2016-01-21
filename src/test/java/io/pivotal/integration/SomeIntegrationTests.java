@@ -40,4 +40,11 @@ public class SomeIntegrationTests {
                 json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/StopCoordinates.json")));
     }
+
+    @Test
+    public void testGetWB() throws Exception {
+        mockMvc.perform(get("/wb?stopId=1_75403")).andExpect(
+                json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/WeatherBusResponse.json")));
+    }
 }
