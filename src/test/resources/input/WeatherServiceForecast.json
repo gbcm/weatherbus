@@ -1,0 +1,14 @@
+{
+  "latitude": 47.6098,
+  "longitude": -122.3332,
+  "forecast": [
+    {
+      "time_epoch": 1516561870,
+      "temp": 14.4
+    },
+    {
+      "time_epoch": 1516563670,
+      "temp": 15.5
+    }
+  ]
+}

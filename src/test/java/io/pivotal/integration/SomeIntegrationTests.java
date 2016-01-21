@@ -40,10 +40,4 @@ public class SomeIntegrationTests {
                 json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/StopCoordinates.json")));
     }
-
-    @Test
-    public void testGetCurrentTemp() throws Exception {
-        mockMvc.perform(get("/?lat=47.6098&lng=-122.3332")).andExpect(
-                json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/CurrentTemp.json")));
-    }
 }
