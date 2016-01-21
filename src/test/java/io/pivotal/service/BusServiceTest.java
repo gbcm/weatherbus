@@ -34,9 +34,9 @@ public class BusServiceTest {
         when(mockService.getDeparturesForStop(stopId)).thenReturn(response);
 
         List<Departure> expectedDepartures = new ArrayList<Departure>() {{
-            add(new Departure("31", "CENTRAL MAGNOLIA FREMONT", 1452550769000L, 1452550571000L));
-            add(new Departure("855", "Lynnwood", 0, 1452551256000L));
-            add(new Departure("32", "SEATTLE CENTER FREMONT", 0, 1452554291000L));
+            add(new Departure("31", "CENTRAL MAGNOLIA FREMONT", 1453317145000L, 1453317145000L));
+            add(new Departure("855", "Lynnwood", 0, 1516561850000L));
+            add(new Departure("32", "SEATTLE CENTER FREMONT", 1516563660000L, 1516563660000L));
         }};
 
         assertEquals(expectedDepartures, subject.getDeparturesForStop("12345"));
@@ -51,7 +51,7 @@ public class BusServiceTest {
                 StopResponse.class);
         when(mockService.getCoordinatesForStop(stopId)).thenReturn(stopResponse);
 
-        Coordinate expectedCoordinate = new Coordinate(47.654365, -122.305214);
+        Coordinate expectedCoordinate = new Coordinate(47.6098, -122.3332);
         Coordinate coordinate = subject.getCoordinatesForStop(stopId);
 
         assertEquals(expectedCoordinate.getLatitude(), coordinate.getLatitude(), 0);

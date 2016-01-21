@@ -1,8 +1,8 @@
 package io.pivotal.service;
 
 public class StopResponseBuilder {
-    private double latitude = 47.654365;
-    private double longitude = -122.305214;
+    private double latitude = 47.6098;
+    private double longitude = -122.3332;
 
     public StopResponse build() {
         StopEntry stopEntry = new StopEntry();
