@@ -4,20 +4,11 @@ import com.google.gson.Gson;
 import io.pivotal.Constants;
 import io.pivotal.service.IOneBusAwayService;
 import io.pivotal.service.IWeatherService;
-import org.springframework.cloud.Cloud;
-import org.springframework.cloud.CloudFactory;
-import org.springframework.cloud.service.ServiceInfo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
-
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 @Configuration
 public class WeatherbusConfig {
