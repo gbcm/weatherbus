@@ -11,6 +11,7 @@ import io.pivotal.service.BusService;
 import io.pivotal.view.JsonListPresenter;
 import io.pivotal.view.JsonPresenter;
 import io.pivotal.view.StopPresenter;
+import io.pivotal.view.UserPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,17 @@ public class UserController {
         }
         stopPresenters.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
         List<JsonPresenter> jsonPresenters = new ArrayList<>(stopPresenters);
+
+        return new JsonListPresenter(jsonPresenters).toJson();
+    }
+
+    @RequestMapping
+    public @ResponseBody String getAllUsers(){
+        List<UserPresenter> userPresenters = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            userPresenters.add(new UserPresenter(user));
+        }
+        List<JsonPresenter> jsonPresenters = new ArrayList<>(userPresenters);
 
         return new JsonListPresenter(jsonPresenters).toJson();
     }

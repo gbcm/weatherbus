@@ -24,8 +24,10 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.util.NestedServletException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.Matchers.any;
@@ -76,6 +78,21 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/StopsForTestUser.json")));
+    }
+
+    @Test
+    public void testGetUsers() throws Exception {
+        List<User> userList = Arrays.asList(
+                new User("Alice"),
+                new User("Bob"),
+                new User("Charlene")
+        );
+        when(userRepository.findAll()).thenReturn(userList);
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/GetAllUsers.json")));
+        verify(userRepository).findAll();
     }
 
     @Test(expected = UserNotFoundException.class)
@@ -227,7 +244,7 @@ public class UserControllerTest {
             if (!(argument instanceof User)) {
                 return false;
             }
-            return ((User)argument).getUsername().equals(expectedUsername);
+            return ((User) argument).getUsername().equals(expectedUsername);
         }
     }
 
@@ -245,8 +262,8 @@ public class UserControllerTest {
             if (!(argument instanceof BusStop)) {
                 return false;
             }
-            return ((BusStop)argument).getApiId().equals(expectedApiId) &&
-                    ((BusStop)argument).getName().equals(expectedName);
+            return ((BusStop) argument).getApiId().equals(expectedApiId) &&
+                    ((BusStop) argument).getName().equals(expectedName);
         }
     }
 }

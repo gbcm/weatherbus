@@ -20,5 +20,5 @@ public class JsonListPresenter {
         }};
 
         return JsonWriter.objectToJson(presenters, options);
-        }
-        }
+    }
+}
