@@ -1,11 +1,12 @@
 package io.pivotal.controller;
 
-
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
-import io.pivotal.service.WeatherService;
+import io.pivotal.service.IWeatherService;
+import io.pivotal.service.response.ForecastResponse;
+import io.pivotal.service.response.TemperatureResponse;
 import io.pivotal.view.WeatherBusPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.Instant;
 import java.util.*;
 
 @Controller
@@ -23,14 +23,25 @@ public class WeatherBusController {
     private BusService busService;
 
     @Autowired
-    private WeatherService weatherService;
+    private IWeatherService weatherService;
 
     @RequestMapping("")
     public @ResponseBody String getWeatherBus(@RequestParam String stopId) throws Exception {
         List<Departure> departures = busService.getDeparturesForStop(stopId);
         Coordinate coordinate = busService.getCoordinatesForStop(stopId);
-        SortedMap<Date, Double> forecast = new TreeMap<>(weatherService.getFutureTemp(coordinate));
-        Map.Entry<Date, Double> tempNow = new AbstractMap.SimpleEntry<>(Date.from(Instant.now()), weatherService.getCurrentTemp(coordinate));
+
+        ForecastResponse forecastResponse = weatherService.getForecast(
+                coordinate.getLatitude(),
+                coordinate.getLongitude());
+        TemperatureResponse temperatureResponse = weatherService.getTemperature(
+                coordinate.getLatitude(),
+                coordinate.getLongitude());
+
+        SortedMap<Date, Double> forecast = new TreeMap<>();
+        forecast.put(new Date(), temperatureResponse.getTemp());
+        for (ForecastResponse.TimedTemp tt : forecastResponse.getForecast()) {
+            forecast.put(new Date(tt.getTimeInMillisec() * 1000), tt.getTemp());
+        }
 
         List<DepartureWithTemperature> dwt = new ArrayList<>();
 
@@ -40,15 +51,11 @@ public class WeatherBusController {
                 departureTimeMs = departure.getScheduledTime();
             }
 
-            Map.Entry<Date, Double> previousTemp = tempNow;
             for (Map.Entry<Date, Double> temp : forecast.entrySet()) {
-                long tempTimeMs = temp.getKey().getTime();
-                if (tempTimeMs > departureTimeMs) {
-                    dwt.add(new DepartureWithTemperature(departure, previousTemp.getValue()));
+                if (departureTimeMs < temp.getKey().getTime()) {
+                    dwt.add(new DepartureWithTemperature(departure, temp.getValue()));
                     break;
                 }
-
-                previousTemp = temp;
             }
         }
 

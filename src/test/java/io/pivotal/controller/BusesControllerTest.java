@@ -58,7 +58,7 @@ public class BusesControllerTest {
 
     @Test
     public void testGetCoordinates() throws Exception {
-        Coordinate coordinate = new Coordinate(47.654365, -122.305214);
+        Coordinate coordinate = new Coordinate(47.6098, -122.3332);
 
         when(busService.getCoordinatesForStop("1_75403")).thenReturn(coordinate);
         mockMvc.perform(get("/buses/coordinates?stopId=1_75403")).andExpect(
