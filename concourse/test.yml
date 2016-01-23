@@ -3,12 +3,9 @@ platform: linux
 image: "docker:///java#8"
 inputs:
   - name: weatherbus-source
-outputs:
-  - name: build
-    path: weatherbus-source/artifacts
 run:
   path: "weatherbus-source/gradlew"
-  args: ["copyJar", "-pweatherbus-source", "-xtest"]
+  args: ["test", "-pweatherbus-source"]
 params:
   "TERM": "xterm"
 
