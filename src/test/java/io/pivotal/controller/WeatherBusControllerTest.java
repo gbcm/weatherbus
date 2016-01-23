@@ -5,7 +5,8 @@ import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
-import io.pivotal.service.IWeatherService;
+import io.pivotal.service.IRetrofitWeatherService;
+import io.pivotal.service.WeatherService;
 import io.pivotal.service.response.ForecastResponse;
 import io.pivotal.service.response.TemperatureResponse;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class WeatherBusControllerTest {
     @Mock
     BusService busService;
     @Mock
-    IWeatherService weatherService;
+    WeatherService weatherService;
     @InjectMocks
     WeatherBusController subject;
 
@@ -64,8 +65,8 @@ public class WeatherBusControllerTest {
 
         when(busService.getDeparturesForStop(stopId)).thenReturn(departures);
         when(busService.getCoordinatesForStop(stopId)).thenReturn(coordinate);
-        when(weatherService.getForecast(latitude, longitude)).thenReturn(forecastResponse);
-        when(weatherService.getTemperature(latitude, longitude)).thenReturn(temperatureResponse);
+        when(weatherService.getForecast(coordinate)).thenReturn(forecastResponse);
+        when(weatherService.getTemperature(coordinate)).thenReturn(temperatureResponse);
 
         mockMvc.perform(get("/wb?stopId=" + stopId)).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(

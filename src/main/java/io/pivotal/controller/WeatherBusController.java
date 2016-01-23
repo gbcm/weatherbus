@@ -4,7 +4,8 @@ import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
-import io.pivotal.service.IWeatherService;
+import io.pivotal.service.IRetrofitWeatherService;
+import io.pivotal.service.WeatherService;
 import io.pivotal.service.response.ForecastResponse;
 import io.pivotal.service.response.TemperatureResponse;
 import io.pivotal.view.WeatherBusPresenter;
@@ -23,19 +24,15 @@ public class WeatherBusController {
     private BusService busService;
 
     @Autowired
-    private IWeatherService weatherService;
+    private WeatherService weatherService;
 
     @RequestMapping("")
     public @ResponseBody String getWeatherBus(@RequestParam String stopId) throws Exception {
         List<Departure> departures = busService.getDeparturesForStop(stopId);
         Coordinate coordinate = busService.getCoordinatesForStop(stopId);
 
-        ForecastResponse forecastResponse = weatherService.getForecast(
-                coordinate.getLatitude(),
-                coordinate.getLongitude());
-        TemperatureResponse temperatureResponse = weatherService.getTemperature(
-                coordinate.getLatitude(),
-                coordinate.getLongitude());
+        ForecastResponse forecastResponse = weatherService.getForecast(coordinate);
+        TemperatureResponse temperatureResponse = weatherService.getTemperature(coordinate);
 
         SortedMap<Date, Double> forecast = new TreeMap<>();
         forecast.put(new Date(), temperatureResponse.getTemp());

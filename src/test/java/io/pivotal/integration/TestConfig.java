@@ -1,7 +1,6 @@
 package io.pivotal.integration;
 
 import com.google.gson.Gson;
-import io.pivotal.Constants;
 import io.pivotal.TestUtilities;
 import io.pivotal.service.*;
 import io.pivotal.service.response.ForecastResponse;
@@ -9,14 +8,10 @@ import io.pivotal.service.response.TemperatureResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @Profile("test")
@@ -46,8 +41,8 @@ public class TestConfig {
     }
 
     @Bean
-    public IWeatherService getWeatherService() {
-        return new IWeatherService() {
+    public IRetrofitWeatherService getWeatherService() {
+        return new IRetrofitWeatherService() {
             Gson gson = new Gson();
             @Override
             public TemperatureResponse getTemperature(@Query("lat") double lat, @Query("lng") double lng) {

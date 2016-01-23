@@ -3,7 +3,7 @@ package io.pivotal.config;
 import com.google.gson.Gson;
 import io.pivotal.Constants;
 import io.pivotal.service.IOneBusAwayService;
-import io.pivotal.service.IWeatherService;
+import io.pivotal.service.IRetrofitWeatherService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -13,11 +13,11 @@ import retrofit.client.OkClient;
 @Configuration
 public class WeatherbusConfig {
 
-    private static IWeatherService createWeatherService(String host) {
+    private static IRetrofitWeatherService createWeatherService(String host) {
         RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(host);
         builder.setClient(new OkClient());
         RestAdapter adapter = builder.build();
-        return adapter.create(IWeatherService.class);
+        return adapter.create(IRetrofitWeatherService.class);
     }
 
     private static IOneBusAwayService createBusService(String host) {
@@ -35,7 +35,7 @@ public class WeatherbusConfig {
         }
 
         @Bean
-        public IWeatherService getWeatherService() {
+        public IRetrofitWeatherService getWeatherService() {
             return createWeatherService(Constants.WEATHER_SERVICE_ENDPOINT);
         }
     }
@@ -48,7 +48,7 @@ public class WeatherbusConfig {
         }
 
         @Bean
-        public IWeatherService getWeatherService() {
+        public IRetrofitWeatherService getWeatherService() {
             String vcapServices = System.getenv("VCAP_SERVICES");
             Gson gson = new Gson();
             CFServices cfs = gson.fromJson(vcapServices, CFServices.class);

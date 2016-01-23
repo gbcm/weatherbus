@@ -5,7 +5,7 @@ import io.pivotal.service.response.TemperatureResponse;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
-public interface IWeatherService {
+public interface IRetrofitWeatherService {
     @GET("/temp")
     TemperatureResponse getTemperature(@Query("lat") double lat, @Query("lng") double lng);
 
