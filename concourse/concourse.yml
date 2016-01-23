@@ -4,11 +4,23 @@ resources:
   source:
     uri: https://github.com/gbcm/weatherbus.git
     branch: master
-- name: weatherbus-disco-source
-  type: git
+- name: version
+  type: semver
   source:
-    uri: https://github.com/kejadlen/weatherbus-disco.git
-    branch: master
+    bucket: weatherbus-pipeline-artifacts
+    key: current-version
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: us-west-2
+    initial_version: 0.0.1
+- name: weatherbus-rc
+  type: s3
+  source:
+    bucket: weatherbus-pipeline-artifacts
+    regexp: weatherbus-(\d\.\d\.\d)-SNAPSHOT.jar
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: us-west-2
 - name: weatherbus-cf
   type: cf
   source:
@@ -19,24 +31,36 @@ resources:
     space: development
 
 jobs:
-- name: weatherbus
+- name: weatherbus-test
   plan:
   - get: weatherbus-source
     trigger: true
   - task: build
     file: weatherbus-source/concourse/build.yml
-  - put: weatherbus-cf
-    params:
-      manifest: weatherbus-source/manifest.yml
-      path: build/weatherbus-0.0.1-SNAPSHOT.jar
-- name: weatherbus-disco
+- name: weatherbus-rc
+  serial_groups: [version]
   plan:
-  - get: weatherbus-disco-source
-    trigger: true
-  - task: build
-    file: weatherbus-disco-source/concourse/build.yml
-  - put: weatherbus-cf
-    params:
-      manifest: weatherbus-disco-source/manifest.yml
-      path: build/disco-0.0.1-SNAPSHOT.jar
+    - get: weatherbus-source
+      passed: [weatherbus-test]
+      trigger: true
+    - get: version
+      params: {pre: rc}
+    - task: build
+      file: weatherbus-source/concourse/build.yml
+    - put: weatherbus-rc
+      params: {from: build/weatherbus-.*.jar}
+    - put: version
+      params: {file: version/number}
+- name: weatherbus-deploy
+  serial: true
+  plan:
+    - get: weatherbus-rc
+      trigger: true
+      passed: [weatherbus-rc]
+    - get: weatherbus-source
+      passed: [weatherbus-rc]
+    - put: weatherbus-cf
+      params:
+        manifest: weatherbus-source/manifest.yml
+        path: weatherbus-rc/weatherbus-0.0.1-SNAPSHOT.jar
 
