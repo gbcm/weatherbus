@@ -51,7 +51,7 @@ jobs:
     - task: build
       file: prime/concourse/build.yml
     - put: prime-rc
-      params: {from: build/weatherbus-.*.jar}
+      params: {from: build/weatherbus-.*\.jar}
     - put: prime-version
       params: {file: prime-version/number}
 - name: prime-deploy
