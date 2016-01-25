@@ -47,7 +47,7 @@ jobs:
       file: prime/concourse/build.yml
     - put: prime-rc
       params: {from: build/weatherbus-.*.jar}
-    - put: version
+    - put: prime-version
       params: {file: prime-version/number}
 - name: prime-deploy
   serial: true
