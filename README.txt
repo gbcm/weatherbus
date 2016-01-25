@@ -16,3 +16,10 @@ To get started:
 4. Tell compiler that lombok is a thing 
 	* Preferences -> Plugins -> Install
 	* Install lombok plugin
+
+Development:
+1. If you want to develop against weatherbus-weather locally:
+	* In Constants.java, set WEATHER_SERVICE_ENDPOINT to "http://localhost:9090/api"
+	* git clone https://github.com/gbcm/weatherbus-weather.git
+	* Open and run weatherbus-weather in IntelliJ
+2. There are some local tools to aid development in the tools directory.
