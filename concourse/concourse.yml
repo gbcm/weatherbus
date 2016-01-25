@@ -29,6 +29,11 @@ resources:
     password: {{cf-password}}
     organization: seattle-beach
     space: development
+- name: weatherbus-web
+  type: git
+  source:
+    uri: https://github.com/sgravrock/weatherbus-web.git
+    branch: master
 
 jobs:
 - name: weatherbus-rc
@@ -56,4 +61,9 @@ jobs:
       params:
         manifest: weatherbus-source/manifest.yml
         path: weatherbus-rc/weatherbus-0.0.1-SNAPSHOT.jar
-
+- name: weatherbus-web
+  plan:
+    - get: weatherbus-web
+      trigger: true
+    - task: build
+      file: weatherbus-web/concourse/build.yml
