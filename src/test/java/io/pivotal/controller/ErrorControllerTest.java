@@ -1,18 +1,28 @@
 package io.pivotal.controller;
 
+import com.google.gson.JsonSyntaxException;
 import io.pivotal.TestUtilities;
 import io.pivotal.errorHandling.ErrorPathConstants;
 import io.pivotal.errorHandling.ErrorController;
+import io.pivotal.service.BusService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import retrofit.RetrofitError;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -57,10 +67,10 @@ public class ErrorControllerTest {
 
     @Test
     public void testRetrofitFailure() throws Exception {
-        mockMvc.perform(get(ErrorPathConstants.ERROR_RETROFIT_CONFIG_PATH))
-                .andExpect(status().isInternalServerError())
-                .andExpect(
-                        json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/RetrofitError.json")));
+        RetrofitError e = RetrofitError.unexpectedError("http://example.com/", new RuntimeException("nope!"));
+        String expected = TestUtilities.jsonFileToString("src/test/resources/output/RetrofitError.json");
+        assertEquals(expected, subject.errorRetrofitConfig(e));
+
     }
 
     @Test
@@ -81,9 +91,8 @@ public class ErrorControllerTest {
 
     @Test
     public void testBadJsonError() throws Exception {
-        mockMvc.perform(get(ErrorPathConstants.JSON_SYNTAX_ERROR_PATH))
-                .andExpect(status().isBadRequest())
-                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/output/BadJsonError.json")));
+        JsonSyntaxException e = new JsonSyntaxException("yo");
+        String expected = TestUtilities.jsonFileToString("src/test/resources/output/BadJsonError.json");
+        assertEquals(expected, subject.badJson(e));
     }
 }

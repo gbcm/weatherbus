@@ -8,8 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class WeatherService {
-    @Autowired
     private IRetrofitWeatherService weatherService;
+
+    @Autowired
+    public WeatherService(IRetrofitWeatherService weatherService) {
+        this.weatherService = weatherService;
+    }
 
     public ForecastResponse getForecast(Coordinate coordinate) {
         return weatherService.getForecast(coordinate.getLatitude(), coordinate.getLongitude());

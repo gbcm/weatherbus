@@ -1,6 +1,8 @@
 package io.pivotal.errorHandling;
 
 import com.google.gson.JsonSyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -15,6 +17,8 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     public String getErrorPath() {
         return ErrorPathConstants.ERROR_PATH;
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
     @ModelAttribute
     public void setVaryResponseHeader(HttpServletResponse response) {
@@ -52,7 +56,9 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     @RequestMapping(ErrorPathConstants.ERROR_RETROFIT_CONFIG_PATH)
     public
     @ResponseBody
-    String errorRetrofitConfig() {
+    String errorRetrofitConfig(RetrofitError e) {
+        String message = "Error making service call to URL: " + e.getUrl() + " " + e.getMessage();
+        logger.error(message, e);
         return new ErrorPresenter(ErrorMessages.RETROFIT.getErrorMessage()).toJson();
     }
 
@@ -79,7 +85,8 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     @RequestMapping(ErrorPathConstants.JSON_SYNTAX_ERROR_PATH)
     public
     @ResponseBody
-    String badJson() {
+    String badJson(JsonSyntaxException e) {
+        logger.error("JSON syntax exception", e);
         return new ErrorPresenter(ErrorMessages.BAD_JSON.getErrorMessage()).toJson();
     }
 }
