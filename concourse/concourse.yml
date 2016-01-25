@@ -1,19 +1,19 @@
 resources:
-- name: weatherbus-source
+- name: prime
   type: git
   source:
     uri: https://github.com/gbcm/weatherbus.git
     branch: master
-- name: version
+- name: prime-version
   type: semver
   source:
     bucket: weatherbus-pipeline-artifacts
-    key: current-version
+    key: prime-version
     access_key_id: {{s3-access-key-id}}
     secret_access_key: {{s3-secret-access-key}}
     region_name: us-west-2
     initial_version: 0.0.1
-- name: weatherbus-rc
+- name: prime-rc
   type: s3
   source:
     bucket: weatherbus-pipeline-artifacts
@@ -21,7 +21,7 @@ resources:
     access_key_id: {{s3-access-key-id}}
     secret_access_key: {{s3-secret-access-key}}
     region_name: us-west-2
-- name: weatherbus-cf
+- name: prime-cf
   type: cf
   source:
     api: https://api.run.pivotal.io
@@ -29,41 +29,41 @@ resources:
     password: {{cf-password}}
     organization: seattle-beach
     space: development
-- name: weatherbus-web
+- name: web
   type: git
   source:
     uri: https://github.com/sgravrock/weatherbus-web.git
     branch: master
 
 jobs:
-- name: weatherbus-rc
+- name: prime
   serial_groups: [version]
   plan:
-    - get: weatherbus-source
+    - get: prime
       trigger: true
-    - get: version
+    - get: prime-version
       params: {pre: rc}
     - task: build
-      file: weatherbus-source/concourse/build.yml
-    - put: weatherbus-rc
+      file: prime/concourse/build.yml
+    - put: prime-rc
       params: {from: build/weatherbus-.*.jar}
-    - put: version
+    - put: prime-version
       params: {file: version/number}
-- name: weatherbus-deploy
+- name: prime-deploy
   serial: true
   plan:
-    - get: weatherbus-rc
+    - get: prime-rc
       trigger: true
-      passed: [weatherbus-rc]
-    - get: weatherbus-source
-      passed: [weatherbus-rc]
-    - put: weatherbus-cf
+      passed: [prime]
+    - get: prime
+      passed: [prime]
+    - put: prime-cf
       params:
-        manifest: weatherbus-source/manifest.yml
-        path: weatherbus-rc/weatherbus-0.0.1-SNAPSHOT.jar
-- name: weatherbus-web
+        manifest: prime/manifest.yml
+        path: prime-rc/weatherbus-0.0.1-SNAPSHOT.jar
+- name: web
   plan:
-    - get: weatherbus-web
+    - get: web
       trigger: true
     - task: build
-      file: weatherbus-web/concourse/build.yml
+      file: web/concourse/build.yml

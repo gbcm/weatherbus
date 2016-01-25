@@ -2,13 +2,13 @@
 platform: linux
 image: "docker:///java#8"
 inputs:
-  - name: weatherbus-source
+  - name: prime
 outputs:
   - name: build
-    path: weatherbus-source/artifacts
+    path: prime/artifacts
 run:
-  path: "weatherbus-source/gradlew"
-  args: ["copyJar", "-pweatherbus-source"]
+  path: "prime/gradlew"
+  args: ["copyJar", "-pprime"]
 params:
   "TERM": "xterm"
 
