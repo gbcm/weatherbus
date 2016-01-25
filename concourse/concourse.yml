@@ -34,6 +34,11 @@ resources:
   source:
     uri: https://github.com/sgravrock/weatherbus-web.git
     branch: master
+- name: weather
+  type: git
+  source:
+    uri: https://github.com/gbcm/weatherbus-weather.git
+    branch: master
 
 jobs:
 - name: prime
@@ -67,3 +72,9 @@ jobs:
       trigger: true
     - task: build
       file: web/concourse/build.yml
+- name: weather
+  plan:
+    - get: weather
+      trigger: true
+    - task: build
+      file: weather/concourse/build.yml

@@ -1,4 +1,4 @@
----    
+---
 platform: linux
 image: "docker:///java#8"
 inputs:
