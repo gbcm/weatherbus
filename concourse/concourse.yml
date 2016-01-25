@@ -31,17 +31,10 @@ resources:
     space: development
 
 jobs:
-- name: weatherbus-test
-  plan:
-  - get: weatherbus-source
-    trigger: true
-  - task: build
-    file: weatherbus-source/concourse/build.yml
 - name: weatherbus-rc
   serial_groups: [version]
   plan:
     - get: weatherbus-source
-      passed: [weatherbus-test]
       trigger: true
     - get: version
       params: {pre: rc}

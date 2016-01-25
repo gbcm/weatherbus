@@ -8,7 +8,7 @@ outputs:
     path: weatherbus-source/artifacts
 run:
   path: "weatherbus-source/gradlew"
-  args: ["copyJar", "-pweatherbus-source", "-xtest"]
+  args: ["copyJar", "-pweatherbus-source"]
 params:
   "TERM": "xterm"
 
