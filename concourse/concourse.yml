@@ -48,7 +48,7 @@ jobs:
     - put: prime-rc
       params: {from: build/weatherbus-.*.jar}
     - put: prime-version
-      params: {file: version/number}
+      params: {file: prime-version/number}
 - name: prime-deploy
   serial: true
   plan:
@@ -60,7 +60,7 @@ jobs:
     - put: prime-cf
       params:
         manifest: prime/manifest.yml
-        path: prime-rc/weatherbus-0.0.1-SNAPSHOT.jar
+        path: prime-rc/weatherbus-*-SNAPSHOT.jar
 - name: web
   plan:
     - get: web

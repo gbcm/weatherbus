@@ -3,12 +3,13 @@ platform: linux
 image: "docker:///java#8"
 inputs:
   - name: prime
+  - name: prime-version
 outputs:
   - name: build
     path: prime/artifacts
 run:
-  path: "prime/gradlew"
-  args: ["copyJar", "-pprime"]
+  path: "prime/concourse/build-artifact.sh"
+  args: ["prime", "prime-version/number"]
 params:
   "TERM": "xterm"
 
