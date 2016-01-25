@@ -1,5 +1,5 @@
-#!/usr/bin/bash -e
+#!/bin/bash -e
 
-version = `cat $1`
-cd $2
+version=`cat $2`
+cd $1
 ./gradlew copyJar -Pversion=$version
