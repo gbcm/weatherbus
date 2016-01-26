@@ -72,6 +72,10 @@ jobs:
       trigger: true
     - task: build
       file: web/concourse/build.yml
+    - put: prime-cf
+      params:
+        manifest: web/manifest.yml
+        path: build
 - name: weather
   plan:
     - get: weather
