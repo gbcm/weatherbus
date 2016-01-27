@@ -41,6 +41,13 @@ public class TestConfig {
 
             @Override
             public StopsForLocationResponse getStopsForLocation(@Query("lat") double lat, @Query("lon") double lng, @Query("latSpan") double latSpan, @Query("lonSpan") double lngSpan) {
+                try {
+                    return gson.fromJson(
+                            TestUtilities.fixtureReader("StopsForLocation"),
+                            StopsForLocationResponse.class);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
         };

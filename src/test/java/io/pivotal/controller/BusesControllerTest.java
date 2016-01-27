@@ -96,8 +96,8 @@ public class BusesControllerTest {
         when(busService.getStopsForCoordinate(new Coordinate(latitude,longitude),latidudeSpan,longitudeSpan))
                 .thenReturn(stops);
 
-        mockMvc.perform(get("/buses/stops?lat=" + Double.toString(latitude) + "&lng=" + Double.toString(longitude)
-                + "&latSpan=" + Double.toString(latidudeSpan) + "&lngSpan=" + Double.toString(longitudeSpan)))
+        mockMvc.perform(get("/buses/stops?lat=" + latitude + "&lng=" + longitude
+                + "&latSpan=" + latidudeSpan + "&lngSpan=" + longitudeSpan))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/StopsForCoordinate.json"
                 )));
