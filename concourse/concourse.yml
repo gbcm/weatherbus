@@ -4,6 +4,7 @@ resources:
   source:
     uri: https://github.com/gbcm/weatherbus.git
     branch: master
+
 - name: prime-version
   type: semver
   source:
@@ -29,6 +30,33 @@ resources:
     password: {{cf-password}}
     organization: seattle-beach
     space: development
+
+- name: weather-version
+  type: semver
+  source:
+    bucket: weatherbus-pipeline-artifacts
+    key: weather-version
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: us-west-2
+    initial_version: 0.0.1
+- name: weather-rc
+  type: s3
+  source:
+    bucket: weatherbus-pipeline-artifacts
+    regexp: weatherbus-weather-.*\.jar
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: us-west-2
+- name: weather-cf
+  type: cf
+  source:
+    api: https://api.run.pivotal.io
+    username: {{cf-username}}
+    password: {{cf-password}}
+    organization: seattle-beach
+    space: development
+    
 - name: web
   type: git
   source:
@@ -66,6 +94,7 @@ jobs:
       params:
         manifest: prime/manifest.yml
         path: prime-rc/weatherbus-*.jar
+
 - name: web
   plan:
     - get: web
@@ -76,19 +105,36 @@ jobs:
       params:
         manifest: web/manifest.yml
         path: build
-- name: web-integration-tests
-  plan:
-    - get: prime-cf
-      passed: ["prime-deploy", "web"]
-      trigger: true
-    - get: web
-      passed: ["web"]
-      trigger: true
-    - task: integration-tests
-      file: web/concourse/integration-tests.yml
+
 - name: weather
   plan:
     - get: weather
       trigger: true
     - task: build
       file: weather/concourse/build.yml
+    - put: weather-rc
+      params: {from: "weather/build/libs/weatherbus-weather-0.0.1-SNAPSHOT.jar"} #  (╯°□°)╯︵ ┻━┻
+      
+- name: weather-deploy
+  serial: true
+  plan:
+    - get: weather-rc
+      trigger: true
+      passed: [weather]
+    - get: weather
+      passed: [weather]
+    - put: weather-cf
+      params:
+        manifest: weather/manifest.yml
+        path: weather-rc/weatherbus-weather-*.jar
+      
+- name: web-integration-tests
+  plan:
+    - get: prime-cf
+      passed: ["prime-deploy"]
+      trigger: true
+    - get: web
+      passed: ["web"]
+      trigger: true
+    - task: integration-tests
+      file: web/concourse/integration-tests.yml
