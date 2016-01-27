@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
 import io.pivotal.service.*;
 import io.pivotal.service.response.ForecastResponse;
+import io.pivotal.service.response.StopsForLocationResponse;
 import io.pivotal.service.response.TemperatureResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,11 @@ public class TestConfig {
             @Override
             public StopResponse getCoordinatesForStop(@Path("stop") String stopId) {
                 return new StopResponseBuilder().build();
+            }
+
+            @Override
+            public StopsForLocationResponse getStopsForLocation(@Query("lat") double lat, @Query("lon") double lng, @Query("latSpan") double latSpan, @Query("lonSpan") double lngSpan) {
+                return null;
             }
         };
     }

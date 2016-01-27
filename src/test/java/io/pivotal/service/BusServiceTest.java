@@ -3,6 +3,8 @@ package io.pivotal.service;
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
+import io.pivotal.model.StopInfo;
+import io.pivotal.service.response.StopsForLocationResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -68,5 +70,32 @@ public class BusServiceTest {
         when(mockService.getCoordinatesForStop(stopId)).thenReturn(stopResponse);
 
         assertEquals(subject.getStopName(stopId), "Stevens Way & Benton Ln");
+    }
+
+    @Test
+    public void testGetStopsForCoordinate() throws Exception {
+        Coordinate coordinate = new Coordinate(47.653435, -122.305641);
+        double latSpan=0.01;
+        double lngSpan= 0.01;
+        StopsForLocationResponse response = gson.fromJson(
+                TestUtilities.fixtureReader("StopsForLocation"),
+                StopsForLocationResponse.class);
+        when(mockService.getStopsForLocation(coordinate.getLatitude(), coordinate.getLongitude(), latSpan, lngSpan))
+                .thenReturn(response);
+        List<StopInfo> expected = new ArrayList<StopInfo>() {{
+            add(new StopInfo());
+            get(0).setId("1_10914");
+            get(0).setLatitude(47.656422);
+            get(0).setLongitude(-122.312164);
+            get(0).setName("15th Ave NE & NE Campus Pkwy");
+            add(new StopInfo());
+            get(1).setId("1_10917");
+            get(1).setLatitude(47.655048);
+            get(1).setLongitude(-122.312195);
+            get(1).setName("15th Ave NE & NE 40th St");
+        }};
+        List<StopInfo> actual = subject.getStopsForCoordinate(coordinate, latSpan, lngSpan);
+
+        assertEquals(actual,expected);
     }
 }

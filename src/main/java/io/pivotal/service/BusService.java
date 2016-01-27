@@ -1,7 +1,8 @@
 package io.pivotal.service;
 
-import io.pivotal.domain.BusStop;
 import io.pivotal.model.Coordinate;
+import io.pivotal.model.StopInfo;
+import io.pivotal.service.response.StopsForLocationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import retrofit.RetrofitError;
@@ -45,6 +46,18 @@ public class BusService {
             return response.getData().getEntry().getName();
         }
         catch (RetrofitError e) {
+            e.printStackTrace();
+            throw new UnknownServiceException(e.getMessage());
+        }
+    }
+
+    public List<StopInfo> getStopsForCoordinate(Coordinate coordinate, double latSpan, double lngSpan) throws UnknownServiceException {
+        try {
+            StopsForLocationResponse response = service
+                    .getStopsForLocation(coordinate.getLatitude(), coordinate.getLongitude(),
+                            latSpan, lngSpan);
+            return response.getData().getStops();
+        } catch(RetrofitError e) {
             e.printStackTrace();
             throw new UnknownServiceException(e.getMessage());
         }

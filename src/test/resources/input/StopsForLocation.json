@@ -1,0 +1,406 @@
+{
+  "code": 200,
+  "currentTime": 1453918745086,
+  "data": {
+    "limitExceeded": false,
+    "list": [
+      {
+        "code": "10914",
+        "direction": "S",
+        "id": "1_10914",
+        "lat": 47.656422,
+        "locationType": 0,
+        "lon": -122.312164,
+        "name": "15th Ave NE & NE Campus Pkwy",
+        "routeIds": [
+          "1_100223",
+          "1_100224",
+          "1_100228",
+          "1_100447",
+          "1_100264",
+          "1_100059",
+          "1_100088",
+          "1_100162",
+          "40_100511",
+          "40_100451",
+          "40_586"
+        ],
+        "wheelchairBoarding": "UNKNOWN"
+      },
+      {
+        "code": "10917",
+        "direction": "S",
+        "id": "1_10917",
+        "lat": 47.655048,
+        "locationType": 0,
+        "lon": -122.312195,
+        "name": "15th Ave NE & NE 40th St",
+        "routeIds": [
+          "1_100140",
+          "1_100223",
+          "1_100224",
+          "1_100228",
+          "1_100059",
+          "1_100088",
+          "1_100162",
+          "1_100168",
+          "40_100235",
+          "40_100511",
+          "40_100451",
+          "40_586"
+        ],
+        "wheelchairBoarding": "UNKNOWN"
+      }
+    ],
+    "outOfRange": false,
+    "references": {
+      "agencies": [
+        {
+          "disclaimer": "",
+          "id": "1",
+          "lang": "EN",
+          "name": "Metro Transit",
+          "phone": "206-553-3000",
+          "privateService": false,
+          "timezone": "America/Los_Angeles",
+          "url": "http://metro.kingcounty.gov"
+        },
+        {
+          "disclaimer": "",
+          "id": "40",
+          "lang": "EN",
+          "name": "Sound Transit",
+          "phone": "1-888-889-6368",
+          "privateService": false,
+          "timezone": "America/Los_Angeles",
+          "url": "http://www.soundtransit.org"
+        },
+        {
+          "disclaimer": "",
+          "id": "29",
+          "lang": "en",
+          "name": "Community Transit",
+          "phone": "(800) 562-1375",
+          "privateService": false,
+          "timezone": "America/Los_Angeles",
+          "url": "http://www.communitytransit.org/"
+        }
+      ],
+      "routes": [
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "U Dist - Montlake - Capitol Hill - Downtown",
+          "id": "1_100223",
+          "longName": "",
+          "shortName": "43",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/043/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Ballard - Montlake",
+          "id": "1_100224",
+          "longName": "",
+          "shortName": "44",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/044/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Mt Baker to University District to Loyal Heights",
+          "id": "1_100228",
+          "longName": "",
+          "shortName": "48",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/048/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "U Dist - Broadway - Downtown Sea",
+          "id": "1_100447",
+          "longName": "",
+          "shortName": "49",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/049/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "University District to Eastlake to CBD",
+          "id": "1_100264",
+          "longName": "",
+          "shortName": "70",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/070/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "South Renton P&R to University District",
+          "id": "1_100059",
+          "longName": "",
+          "shortName": "167",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/167/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Twin Lakes P&R to University District",
+          "id": "1_100088",
+          "longName": "",
+          "shortName": "197",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/197/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Issaquah to University District",
+          "id": "1_100162",
+          "longName": "",
+          "shortName": "271",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/271/n0.html"
+        },
+        {
+          "agencyId": "40",
+          "color": "",
+          "description": "Redmond University District",
+          "id": "40_100511",
+          "longName": "Redmond - University District",
+          "shortName": "542",
+          "textColor": "",
+          "type": 3,
+          "url": "http://www.soundtransit.org/Schedules/ST-Express-Bus/542"
+        },
+        {
+          "agencyId": "40",
+          "color": "",
+          "description": "Issaquah University District Northgate",
+          "id": "40_100451",
+          "longName": "Issaquah - Northgate",
+          "shortName": "556",
+          "textColor": "",
+          "type": 3,
+          "url": "http://www.soundtransit.org/Schedules/ST-Express-Bus/556"
+        },
+        {
+          "agencyId": "40",
+          "color": "",
+          "description": "",
+          "id": "40_586",
+          "longName": "Tacoma - U. District",
+          "shortName": "586",
+          "textColor": "",
+          "type": 3,
+          "url": ""
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Laurelhurst to Downtown Seattle",
+          "id": "1_100140",
+          "longName": "",
+          "shortName": "25",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/025/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Juanita to University District",
+          "id": "1_100168",
+          "longName": "",
+          "shortName": "277",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/277/n0.html"
+        },
+        {
+          "agencyId": "40",
+          "color": "",
+          "description": "Kirkland University District",
+          "id": "40_100235",
+          "longName": "Kirkland - University District",
+          "shortName": "540",
+          "textColor": "",
+          "type": 3,
+          "url": "http://www.soundtransit.org/Schedules/ST-Express-Bus/540"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "U-District to Fremont to Central Magnolia",
+          "id": "1_100184",
+          "longName": "",
+          "shortName": "31",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/031/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "U-District to Fremont to Interbay to Sea Center W",
+          "id": "1_100193",
+          "longName": "",
+          "shortName": "32",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/032/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Lake City  to University District",
+          "id": "1_100254",
+          "longName": "",
+          "shortName": "65",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/065/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Northgate TC to Roosevelt to University District",
+          "id": "1_100259",
+          "longName": "",
+          "shortName": "67",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/067/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Northgate TC to Ravenna to University District",
+          "id": "1_100261",
+          "longName": "",
+          "shortName": "68",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/068/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Northgate TC to Lake City to Sand Pt to U-District",
+          "id": "1_100269",
+          "longName": "",
+          "shortName": "75",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/075/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Woodinville P&R to University District",
+          "id": "1_100214",
+          "longName": "",
+          "shortName": "372",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/372/n0.html"
+        },
+        {
+          "agencyId": "1",
+          "color": "",
+          "description": "Aurora Village TC to University District",
+          "id": "1_100215",
+          "longName": "",
+          "shortName": "373",
+          "textColor": "",
+          "type": 3,
+          "url": "http://metro.kingcounty.gov/schedules/373/n0.html"
+        },
+        {
+          "agencyId": "29",
+          "color": "",
+          "description": "",
+          "id": "29_810",
+          "longName": "McCollum Park - University District",
+          "shortName": "810",
+          "textColor": "",
+          "type": 3,
+          "url": ""
+        },
+        {
+          "agencyId": "29",
+          "color": "",
+          "description": "",
+          "id": "29_821",
+          "longName": "Marysville - University District",
+          "shortName": "821",
+          "textColor": "",
+          "type": 3,
+          "url": ""
+        },
+        {
+          "agencyId": "29",
+          "color": "",
+          "description": "",
+          "id": "29_855",
+          "longName": "Lynnwood - University District",
+          "shortName": "855",
+          "textColor": "",
+          "type": 3,
+          "url": ""
+        },
+        {
+          "agencyId": "29",
+          "color": "",
+          "description": "",
+          "id": "29_860",
+          "longName": "McCollum Park - University District",
+          "shortName": "860",
+          "textColor": "",
+          "type": 3,
+          "url": ""
+        },
+        {
+          "agencyId": "29",
+          "color": "",
+          "description": "",
+          "id": "29_871",
+          "longName": "Edmonds P&R - University District",
+          "shortName": "871",
+          "textColor": "",
+          "type": 3,
+          "url": ""
+        },
+        {
+          "agencyId": "29",
+          "color": "",
+          "description": "",
+          "id": "29_880",
+          "longName": "Mukilteo - University District",
+          "shortName": "880",
+          "textColor": "",
+          "type": 3,
+          "url": ""
+        }
+      ],
+      "situations": [],
+      "stops": [],
+      "trips": []
+    }
+  },
+  "text": "OK",
+  "version": 2
+}
