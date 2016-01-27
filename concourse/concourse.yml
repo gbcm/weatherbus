@@ -79,7 +79,7 @@ jobs:
 - name: web-integration-tests
   plan:
     - get: prime-cf
-      passed: ["prime-deploy", "web"]
+      passed: ["prime-deploy"]
       trigger: true
     - get: web
       passed: ["web"]
