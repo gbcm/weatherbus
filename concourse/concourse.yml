@@ -76,6 +76,16 @@ jobs:
       params:
         manifest: web/manifest.yml
         path: build
+- name: web-integration-tests
+  plan:
+    - get: prime-cf
+      passed: ["prime-deploy", "web"]
+      trigger: true
+    - get: web
+      passed: ["web"]
+      trigger: true
+    - task: integration-tests
+      file: web/concourse/integration-tests.yml
 - name: weather
   plan:
     - get: weather
