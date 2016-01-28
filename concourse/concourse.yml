@@ -56,12 +56,7 @@ resources:
     password: {{cf-password}}
     organization: seattle-beach
     space: development
-    
-- name: web
-  type: git
-  source:
-    uri: https://github.com/sgravrock/weatherbus-web.git
-    branch: master
+
 - name: weather
   type: git
   source:
@@ -95,17 +90,6 @@ jobs:
         manifest: prime/manifest.yml
         path: prime-rc/weatherbus-*.jar
 
-- name: web
-  plan:
-    - get: web
-      trigger: true
-    - task: build
-      file: web/concourse/build.yml
-    - put: prime-cf
-      params:
-        manifest: web/manifest.yml
-        path: build
-
 - name: weather
   plan:
     - get: weather
@@ -114,7 +98,7 @@ jobs:
       file: weather/concourse/build.yml
     - put: weather-rc
       params: {from: "weather/build/libs/weatherbus-weather-0.0.1-SNAPSHOT.jar"} #  (╯°□°)╯︵ ┻━┻
-      
+
 - name: weather-deploy
   serial: true
   plan:
@@ -127,14 +111,3 @@ jobs:
       params:
         manifest: weather/manifest.yml
         path: weather-rc/weatherbus-weather-*.jar
-      
-- name: web-integration-tests
-  plan:
-    - get: prime-cf
-      passed: ["prime-deploy"]
-      trigger: true
-    - get: web
-      passed: ["web"]
-      trigger: true
-    - task: integration-tests
-      file: web/concourse/integration-tests.yml
