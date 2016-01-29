@@ -7,11 +7,13 @@ import io.pivotal.service.IRetrofitWeatherService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 @Configuration
-public class WeatherbusConfig {
+public class WeatherbusConfig  extends WebMvcConfigurerAdapter {
 
     private static IRetrofitWeatherService createWeatherService(String host) {
         RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(host);
@@ -25,6 +27,13 @@ public class WeatherbusConfig {
         builder.setClient(new OkClient());
         RestAdapter adapter = builder.build();
         return adapter.create(IOneBusAwayService.class);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("POST", "GET");
     }
 
     @Profile("default")

@@ -20,11 +20,6 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
 
     private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
-    @ModelAttribute
-    public void setVaryResponseHeader(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-    }
-
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @RequestMapping(ErrorPathConstants.ERROR_PATH)
     public
