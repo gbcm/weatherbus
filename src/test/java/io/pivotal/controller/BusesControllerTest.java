@@ -2,6 +2,7 @@ package io.pivotal.controller;
 
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
+import io.pivotal.model.StopInfo;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
 import org.junit.Before;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -73,5 +73,33 @@ public class BusesControllerTest {
         } finally {
             verifyNoMoreInteractions(busService);
         }
+    }
+
+    @Test
+    public void testGetStopsForCoordinate() throws Exception {
+        double latitude = 47.653435;
+        double longitude = 122.305641;
+        double latidudeSpan = 0.01;
+        double longitudeSpan = 0.01;
+        List<StopInfo> stops = new ArrayList<StopInfo>() {{
+            add(new StopInfo());
+            get(0).setId("1_10914");
+            get(0).setLatitude(47.656422);
+            get(0).setLongitude(-122.312164);
+            get(0).setName("15th Ave NE & NE Campus Pkwy");
+            add(new StopInfo());
+            get(1).setId("1_10917");
+            get(1).setLatitude(47.655048);
+            get(1).setLongitude(-122.312195);
+            get(1).setName("15th Ave NE & NE 40th St");
+        }};
+        when(busService.getStopsForCoordinate(new Coordinate(latitude,longitude),latidudeSpan,longitudeSpan))
+                .thenReturn(stops);
+
+        mockMvc.perform(get("/buses/stops?lat=" + latitude + "&lng=" + longitude
+                + "&latSpan=" + latidudeSpan + "&lngSpan=" + longitudeSpan))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/StopsForCoordinate.json"
+                )));
     }
 }

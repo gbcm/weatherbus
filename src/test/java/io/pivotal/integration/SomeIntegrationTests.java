@@ -3,7 +3,6 @@ package io.pivotal.integration;
 import io.pivotal.TestUtilities;
 import io.pivotal.WeatherbusApplication;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +45,12 @@ public class SomeIntegrationTests {
         mockMvc.perform(get("/wb?stopId=1_75403")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/output/WeatherBusResponse.json")));
+    }
+
+    @Test
+    public void testGetStopsForLocation() throws Exception {
+        mockMvc.perform(get("/buses/stops?lat=47.653435&lng=122.305641&latSpan=0.01&lngSpan=0.01")).andExpect(
+                json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/StopsForCoordinate.json")));
     }
 }

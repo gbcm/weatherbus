@@ -1,12 +1,10 @@
 package io.pivotal.controller;
 
 import io.pivotal.model.Coordinate;
+import io.pivotal.model.StopInfo;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
-import io.pivotal.view.CoordinatePresenter;
-import io.pivotal.view.DeparturePresenter;
-import io.pivotal.view.JsonListPresenter;
-import io.pivotal.view.JsonPresenter;
+import io.pivotal.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -40,5 +38,18 @@ public class BusesController {
         Coordinate coordinate = busService.getCoordinatesForStop(stopId);
         JsonPresenter presenter = new CoordinatePresenter(stopId, coordinate);
         return presenter.toJson();
+    }
+
+    @RequestMapping(path = "stops", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public @ResponseBody String getStopsForCoordinate(@RequestParam double lat, @RequestParam double lng,
+                                              @RequestParam double latSpan, @RequestParam double lngSpan) throws Exception {
+        List<StopInfo> stops = busService.getStopsForCoordinate(new Coordinate(lat,lng), latSpan, lngSpan);
+        List<JsonPresenter> presenters = new ArrayList<>();
+
+        for (StopInfo stop: stops) {
+            presenters.add(new StopInfoPresenter(stop));
+        }
+
+        return new JsonListPresenter(presenters).toJson();
     }
 }
