@@ -28,6 +28,16 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
         return new ErrorPresenter(ErrorMessages.UNKNOWN.getErrorMessage()).toJson();
     }
 
+    @ExceptionHandler({RuntimeException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @RequestMapping(ErrorPathConstants.ERROR_RUNTIME_ERROR_PATH)
+    public
+    @ResponseBody
+    String runtimeException(RuntimeException e) {
+        logger.error("Unhandled exception", e);
+        return new ErrorPresenter(ErrorMessages.UNKNOWN.getErrorMessage()).toJson();
+    }
+
     @ExceptionHandler({MissingServletRequestParameterException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @RequestMapping(ErrorPathConstants.ERROR_NO_PARAMS_PATH)
@@ -55,6 +65,15 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
         String message = "Error making service call to URL: " + e.getUrl() + " " + e.getMessage();
         logger.error(message, e);
         return new ErrorPresenter(ErrorMessages.RETROFIT.getErrorMessage()).toJson();
+    }
+
+    @ExceptionHandler({StopNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @RequestMapping(ErrorPathConstants.ERROR_STOP_NOT_FOUND_PATH)
+    public
+    @ResponseBody
+    String errorStopNotFound() {
+        return new ErrorPresenter(ErrorMessages.STOP_NOT_FOUND.getErrorMessage()).toJson();
     }
 
     @ExceptionHandler({UserNotFoundException.class})

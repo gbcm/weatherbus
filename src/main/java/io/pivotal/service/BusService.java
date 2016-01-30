@@ -1,5 +1,6 @@
 package io.pivotal.service;
 
+import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.StopInfo;
 import io.pivotal.service.response.StopsForLocationResponse;
@@ -39,10 +40,13 @@ public class BusService {
         }
     }
 
-    public String getStopName(String stopId) throws UnknownServiceException {
+    public String getStopName(String stopId) throws UnknownServiceException, StopNotFoundException {
         try {
             StopResponse response = service
                     .getCoordinatesForStop(stopId);
+            if (response == null || response.getData() == null) {
+                throw new StopNotFoundException();
+            }
             return response.getData().getEntry().getName();
         }
         catch (RetrofitError e) {

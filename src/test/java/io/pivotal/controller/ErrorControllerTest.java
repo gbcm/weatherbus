@@ -50,6 +50,14 @@ public class ErrorControllerTest {
     }
 
     @Test
+    public void testRuntimeError() throws Exception {
+        mockMvc.perform(get(ErrorPathConstants.ERROR_RUNTIME_ERROR_PATH))
+                .andExpect(status().isInternalServerError())
+                .andExpect(
+                        json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/output/GenericError.json")));
+    }
+
+    @Test
     public void testNoQueryParamsError() throws Exception {
         mockMvc.perform(get(ErrorPathConstants.ERROR_NO_PARAMS_PATH))
                 .andExpect(status().isBadRequest())
@@ -71,6 +79,14 @@ public class ErrorControllerTest {
         String expected = TestUtilities.jsonFileToString("src/test/resources/output/RetrofitError.json");
         assertEquals(expected, subject.errorRetrofitConfig(e));
 
+    }
+
+    @Test
+    public void testStopNotFoundError() throws Exception {
+        mockMvc.perform(get(ErrorPathConstants.ERROR_STOP_NOT_FOUND_PATH))
+                .andExpect(status().isNotFound())
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/output/StopNotFoundError.json")));
     }
 
     @Test

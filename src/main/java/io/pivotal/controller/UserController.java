@@ -5,6 +5,7 @@ import io.pivotal.domain.BusStop;
 import io.pivotal.domain.BusStopRepository;
 import io.pivotal.domain.User;
 import io.pivotal.domain.UserRepository;
+import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.errorHandling.UserAlreadyExistsException;
 import io.pivotal.errorHandling.UserNotFoundException;
 import io.pivotal.service.BusService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +98,10 @@ public class UserController {
     @ResponseBody
     String addStop(
             @PathVariable("username") String username,
-            @RequestBody String stopIdJson) throws Exception {
+            @RequestBody String stopIdJson) throws
+            UnknownServiceException,
+            UserNotFoundException,
+            StopNotFoundException {
         Map<String, String> mapOfJson = gson.fromJson(stopIdJson, HashMap.class);
         String nameOfParam = "stopId";
 

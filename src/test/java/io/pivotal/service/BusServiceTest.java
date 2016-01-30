@@ -2,6 +2,7 @@ package io.pivotal.service;
 
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
+import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.StopInfo;
 import io.pivotal.service.response.StopsForLocationResponse;
@@ -70,6 +71,14 @@ public class BusServiceTest {
         when(mockService.getCoordinatesForStop(stopId)).thenReturn(stopResponse);
 
         assertEquals(subject.getStopName(stopId), "Stevens Way & Benton Ln");
+    }
+
+    @Test(expected = StopNotFoundException.class)
+    public void testGetStopName_invalidStopId() throws Exception {
+        StopResponse stopResponse = new StopResponse();
+        String stopId = "bogus";
+        when(mockService.getCoordinatesForStop(stopId)).thenReturn(stopResponse);
+        subject.getStopName(stopId);
     }
 
     @Test
