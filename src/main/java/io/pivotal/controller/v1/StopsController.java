@@ -2,17 +2,24 @@ package io.pivotal.controller.v1;
 
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
+import io.pivotal.model.StopInfo;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
 import io.pivotal.service.WeatherService;
 import io.pivotal.service.response.ForecastResponse;
 import io.pivotal.service.response.TemperatureResponse;
+import io.pivotal.view.JsonListPresenter;
+import io.pivotal.view.JsonPresenter;
+import io.pivotal.view.StopInfoPresenter;
 import io.pivotal.view.WeatherBusPresenter;
+import io.pivotal.view.v1.StopsCollectionPresenter;
 import io.pivotal.view.v1.StopsObjectPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.UnknownServiceException;
@@ -27,7 +34,20 @@ public class StopsController {
     @Autowired
     private WeatherService weatherService;
 
-    @RequestMapping("/{stopId}")
+    @RequestMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public @ResponseBody String getStopsForCoordinate(@RequestParam double lat, @RequestParam double lng,
+                                                      @RequestParam double latSpan, @RequestParam double lngSpan) throws Exception {
+        List<StopInfo> stops = busService.getStopsForCoordinate(new Coordinate(lat,lng), latSpan, lngSpan);
+        List<StopInfoPresenter> presenters = new ArrayList<>();
+
+        for (StopInfo stop: stops) {
+            presenters.add(new StopInfoPresenter(stop));
+        }
+
+        return new StopsCollectionPresenter(presenters).toJson();
+    }
+
+    @RequestMapping(path = "/{stopId}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public
     @ResponseBody
     String getWeatherBus(@PathVariable String stopId) throws UnknownServiceException {

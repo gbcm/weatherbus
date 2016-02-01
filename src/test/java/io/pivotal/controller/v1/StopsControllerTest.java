@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
 import io.pivotal.controller.WeatherBusController;
 import io.pivotal.model.Coordinate;
+import io.pivotal.model.StopInfo;
 import io.pivotal.service.BusService;
 import io.pivotal.service.Departure;
 import io.pivotal.service.WeatherService;
@@ -72,5 +73,33 @@ public class StopsControllerTest {
         mockMvc.perform(get("/api/v1/stops/" + stopId)).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/v1/output/StopsObjectResponse.json")));
+    }
+
+    @Test
+    public void testGetStopsForCoordinate() throws Exception {
+        double latitude = 47.653435;
+        double longitude = 122.305641;
+        double latitudeSpan = 0.01;
+        double longitudeSpan = 0.01;
+        List<StopInfo> stops = new ArrayList<StopInfo>() {{
+            add(new StopInfo());
+            get(0).setId("1_10914");
+            get(0).setLatitude(47.656422);
+            get(0).setLongitude(-122.312164);
+            get(0).setName("15th Ave NE & NE Campus Pkwy");
+            add(new StopInfo());
+            get(1).setId("1_10917");
+            get(1).setLatitude(47.655048);
+            get(1).setLongitude(-122.312195);
+            get(1).setName("15th Ave NE & NE 40th St");
+        }};
+        when(busService.getStopsForCoordinate(new Coordinate(latitude,longitude),latitudeSpan,longitudeSpan))
+                .thenReturn(stops);
+
+        mockMvc.perform(get("/api/v1/stops?lat=" + latitude + "&lng=" + longitude
+                + "&latSpan=" + latitudeSpan + "&lngSpan=" + longitudeSpan))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/v1/output/StopsCollectionResponse.json"
+                )));
     }
 }
