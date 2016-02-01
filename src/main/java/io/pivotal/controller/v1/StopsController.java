@@ -35,8 +35,12 @@ public class StopsController {
     private WeatherService weatherService;
 
     @RequestMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-    public @ResponseBody String getStopsForCoordinate(@RequestParam double lat, @RequestParam double lng,
-                                                      @RequestParam double latSpan, @RequestParam double lngSpan) throws Exception {
+    public @ResponseBody String getStopsForCoordinate(
+            @RequestParam(name = "lat", required=false, defaultValue="47.653435") double lat,
+            @RequestParam(name = "lng", required=false, defaultValue="-122.305641") double lng,
+            @RequestParam(name = "latSpan", required=false, defaultValue="0.01") double latSpan,
+            @RequestParam(name = "lngSpan", required=false, defaultValue="0.01") double lngSpan)
+            throws UnknownServiceException {
         List<StopInfo> stops = busService.getStopsForCoordinate(new Coordinate(lat,lng), latSpan, lngSpan);
         List<StopInfoPresenter> presenters = new ArrayList<>();
 

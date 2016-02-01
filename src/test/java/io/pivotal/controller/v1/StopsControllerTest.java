@@ -78,7 +78,7 @@ public class StopsControllerTest {
     @Test
     public void testGetStopsForCoordinate() throws Exception {
         double latitude = 47.653435;
-        double longitude = 122.305641;
+        double longitude = -122.305641;
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
         List<StopInfo> stops = new ArrayList<StopInfo>() {{
@@ -98,6 +98,33 @@ public class StopsControllerTest {
 
         mockMvc.perform(get("/api/v1/stops?lat=" + latitude + "&lng=" + longitude
                 + "&latSpan=" + latitudeSpan + "&lngSpan=" + longitudeSpan))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/v1/output/StopsCollectionResponse.json"
+                )));
+    }
+
+    @Test
+    public void testGetStopsForCoordinateWithNoParams() throws Exception {
+        double latitude = 47.653435;
+        double longitude = -122.305641;
+        double latitudeSpan = 0.01;
+        double longitudeSpan = 0.01;
+        List<StopInfo> stops = new ArrayList<StopInfo>() {{
+            add(new StopInfo());
+            get(0).setId("1_10914");
+            get(0).setLatitude(47.656422);
+            get(0).setLongitude(-122.312164);
+            get(0).setName("15th Ave NE & NE Campus Pkwy");
+            add(new StopInfo());
+            get(1).setId("1_10917");
+            get(1).setLatitude(47.655048);
+            get(1).setLongitude(-122.312195);
+            get(1).setName("15th Ave NE & NE 40th St");
+        }};
+        when(busService.getStopsForCoordinate(new Coordinate(latitude,longitude),latitudeSpan,longitudeSpan))
+                .thenReturn(stops);
+
+        mockMvc.perform(get("/api/v1/stops"))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/v1/output/StopsCollectionResponse.json"
                 )));
