@@ -13,7 +13,7 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 @Configuration
-public class WeatherbusConfig  extends WebMvcConfigurerAdapter {
+public class WeatherbusConfig extends WebMvcConfigurerAdapter {
 
     private static IRetrofitWeatherService createWeatherService(String host) {
         RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(host);
