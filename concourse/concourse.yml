@@ -77,18 +77,6 @@ jobs:
       params: {from: build/weatherbus-.*\.jar}
     - put: prime-version
       params: {file: prime-version/number}
-- name: prime-deploy
-  serial: true
-  plan:
-    - get: prime-rc
-      trigger: true
-      passed: [prime]
-    - get: prime
-      passed: [prime]
-    - put: prime-cf
-      params:
-        manifest: prime/manifest.yml
-        path: prime-rc/weatherbus-*.jar
 
 - name: weather
   plan:
@@ -98,16 +86,3 @@ jobs:
       file: weather/concourse/build.yml
     - put: weather-rc
       params: {from: "weather/build/libs/weatherbus-weather-0.0.1-SNAPSHOT.jar"} #  (╯°□°)╯︵ ┻━┻
-
-- name: weather-deploy
-  serial: true
-  plan:
-    - get: weather-rc
-      trigger: true
-      passed: [weather]
-    - get: weather
-      passed: [weather]
-    - put: weather-cf
-      params:
-        manifest: weather/manifest.yml
-        path: weather-rc/weatherbus-weather-*.jar
