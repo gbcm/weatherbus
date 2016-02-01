@@ -3,5 +3,5 @@ applications:
 - name: weatherbus
   memory: 512M
   host: weatherbus-prime-dev
-  path: ./build/libs/weatherbus-0.0.1-SNAPSHOT.jar
+  path: ./build/libs/weatherbus-SNAPSHOT.jar
   buildpack: java_buildpack

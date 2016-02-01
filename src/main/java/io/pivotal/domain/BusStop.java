@@ -13,7 +13,7 @@ public class BusStop {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "apiId", nullable = false, unique = true)
+    @Column(name = "api_id", nullable = false, unique = true)
     private String apiId;
 
     @Column(name = "name", nullable = false)
