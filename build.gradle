@@ -10,17 +10,43 @@ buildscript {
 	}
 }
 
+plugins {
+	id "org.asciidoctor.convert" version "1.5.2"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot' 
+apply plugin: 'spring-boot'
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+test {
+	outputs.dir snippetsDir
+}
+
+asciidoctor {
+	attributes 'snippets': snippetsDir
+	inputs.dir snippetsDir
+	outputDir "build/asciidoc"
+	dependsOn test
+	sourceDir 'src/main/asciidoc'
+}
 
 jar {
 	baseName = 'weatherbus'
 	if (!project.hasProperty('version') || !version) {
 		version = 'SNAPSHOT'
 	}
+
+	dependsOn asciidoctor
+	from ("${asciidoctor.outputDir}/html5") {
+		into 'static/docs'
+	}
 }
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -47,6 +73,7 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('net.javacrumbs.json-unit:json-unit:1.8.0')
 	testCompile('net.javacrumbs.json-unit:json-unit-spring:1.8.0')
+	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.0.1.RELEASE')
 }
 
 dependencyManagement {

@@ -1,0 +1,32 @@
+Weatherbus Prime
+================
+
+GET all stops
+-------------
+
+Curl
+~~~~
+include::{snippets}/stopsCollection/curl-request.adoc[]
+
+Request
+~~~~~~~
+include::{snippets}/stopsCollection/http-request.adoc[]
+
+Response
+~~~~~~~~
+include::{snippets}/stopsCollection/http-response.adoc[]
+
+GET a single stop
+-----------------
+
+Curl
+~~~~
+include::{snippets}/stopsObject/curl-request.adoc[]
+
+Request
+~~~~~~~
+include::{snippets}/stopsObject/http-request.adoc[]
+
+Response
+~~~~~~~~
+include::{snippets}/stopsObject/http-response.adoc[]

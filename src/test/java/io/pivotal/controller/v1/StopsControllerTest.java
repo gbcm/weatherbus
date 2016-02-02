@@ -11,11 +11,13 @@ import io.pivotal.service.WeatherService;
 import io.pivotal.service.response.ForecastResponse;
 import io.pivotal.service.response.TemperatureResponse;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,6 +27,11 @@ import java.util.List;
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,13 +43,18 @@ public class StopsControllerTest {
     @InjectMocks
     StopsController subject;
 
+    @Rule
+    public RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
+
     private MockMvc mockMvc;
 
     Gson gson = new Gson();
 
     @Before
     public void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(subject).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(subject)
+                .apply(documentationConfiguration(this.restDocumentation))
+                .build();
     }
 
     @Test
@@ -70,9 +82,12 @@ public class StopsControllerTest {
         when(weatherService.getForecast(coordinate)).thenReturn(forecastResponse);
         when(weatherService.getTemperature(coordinate)).thenReturn(temperatureResponse);
 
-        mockMvc.perform(get("/api/v1/stops/" + stopId)).andExpect(
-                json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/v1/output/StopsObjectResponse.json")));
+        mockMvc.perform(get("/api/v1/stops/" + stopId))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsObjectResponse.json")))
+                .andDo(document(
+                        "stopsObject",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
     }
 
     @Test
@@ -93,14 +108,15 @@ public class StopsControllerTest {
             get(1).setLongitude(-122.312195);
             get(1).setName("15th Ave NE & NE 40th St");
         }};
-        when(busService.getStopsForCoordinate(new Coordinate(latitude,longitude),latitudeSpan,longitudeSpan))
+        when(busService.getStopsForCoordinate(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
                 .thenReturn(stops);
 
-        mockMvc.perform(get("/api/v1/stops?lat=" + latitude + "&lng=" + longitude
-                + "&latSpan=" + latitudeSpan + "&lngSpan=" + longitudeSpan))
-                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/v1/output/StopsCollectionResponse.json"
-                )));
+        mockMvc.perform(get("/api/v1/stops?lat=" + latitude + "&lng=" + longitude + "&latSpan=" + latitudeSpan + "&lngSpan=" + longitudeSpan))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsCollectionResponse.json")))
+                .andDo(document(
+                        "stopsCollection",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
     }
 
     @Test
@@ -121,12 +137,14 @@ public class StopsControllerTest {
             get(1).setLongitude(-122.312195);
             get(1).setName("15th Ave NE & NE 40th St");
         }};
-        when(busService.getStopsForCoordinate(new Coordinate(latitude,longitude),latitudeSpan,longitudeSpan))
+        when(busService.getStopsForCoordinate(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
                 .thenReturn(stops);
 
         mockMvc.perform(get("/api/v1/stops"))
-                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/v1/output/StopsCollectionResponse.json"
-                )));
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsCollectionResponse.json")))
+                .andDo(document(
+                        "stopsCollectionDefaultParams",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
     }
 }
