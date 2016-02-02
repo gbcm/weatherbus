@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +44,7 @@ public class UserController {
     public
     @ResponseBody
     String getStops(@RequestParam String username) throws Exception {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameIgnoreCase(username);
         if (user == null) {
             throw new UserNotFoundException();
         }
@@ -83,7 +82,7 @@ public class UserController {
         }
         String username = mapOfJson.get(nameOfParam);
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameIgnoreCase(username);
         if (user != null) {
             throw new UserAlreadyExistsException();
         }
@@ -109,7 +108,7 @@ public class UserController {
             throw new IllegalArgumentException();
         }
         String stopId = mapOfJson.get(nameOfParam);
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameIgnoreCase(username);
         if (user == null) {
             throw new UserNotFoundException();
         }

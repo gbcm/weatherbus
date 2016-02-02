@@ -24,7 +24,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.util.NestedServletException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +72,7 @@ public class UserControllerTest {
                         new BusStop("another bus stop name", "12_A_J_56")
                 )));
 
-        when(userRepository.findByUsername("Test")).thenReturn(testUser);
+        when(userRepository.findByUsernameIgnoreCase("Test")).thenReturn(testUser);
         mockMvc.perform(get("/users/stops?username=Test"))
                 .andExpect(status().isOk())
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString(
@@ -98,7 +97,7 @@ public class UserControllerTest {
     @Test(expected = UserNotFoundException.class)
     public void testGetStopsWithUsernameNotFound() throws Throwable {
         try {
-            when(userRepository.findByUsername("Test")).thenReturn(null);
+            when(userRepository.findByUsernameIgnoreCase("Test")).thenReturn(null);
             mockMvc.perform(get("/users/stops?username=Test"));
         } catch (NestedServletException e) {
             throw e.getCause();
@@ -116,7 +115,7 @@ public class UserControllerTest {
 
     @Test
     public void testAddUser() throws Exception {
-        when(userRepository.findByUsername("Test")).thenReturn(null);
+        when(userRepository.findByUsernameIgnoreCase("Test")).thenReturn(null);
 
         mockMvc.perform(post("/users/").contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"Test\"}"))
@@ -126,7 +125,7 @@ public class UserControllerTest {
 
     @Test(expected = UserAlreadyExistsException.class)
     public void testAddUserAlreadyExists() throws Throwable {
-        when(userRepository.findByUsername("Test")).thenReturn(testUser);
+        when(userRepository.findByUsernameIgnoreCase("Test")).thenReturn(testUser);
         try {
             mockMvc.perform(post("/users/").contentType(MediaType.APPLICATION_JSON)
                     .content("{\"username\":\"Test\"}"));
@@ -165,7 +164,7 @@ public class UserControllerTest {
     public void testAddNewStop() throws Exception {
         String expectedApiId = "12_B";
         String expectedName = "twelve bee";
-        when(userRepository.findByUsername("Test")).thenReturn(testUser);
+        when(userRepository.findByUsernameIgnoreCase("Test")).thenReturn(testUser);
         when(busStopRepository.findByApiId(expectedApiId)).thenReturn(null);
         when(busService.getStopName(expectedApiId)).thenReturn(expectedName);
 
@@ -208,7 +207,7 @@ public class UserControllerTest {
 
     @Test
     public void testAddExistingStop() throws Exception {
-        when(userRepository.findByUsername("Test")).thenReturn(testUser);
+        when(userRepository.findByUsernameIgnoreCase("Test")).thenReturn(testUser);
         BusStop busStop = new BusStop("Thirteen see", "13_C");
         when(busStopRepository.findByApiId("13_C")).thenReturn(busStop);
 
@@ -221,7 +220,7 @@ public class UserControllerTest {
 
     @Test(expected = UserNotFoundException.class)
     public void testAddStopUserNotFound() throws Throwable {
-        when(userRepository.findByUsername("Test")).thenReturn(null);
+        when(userRepository.findByUsernameIgnoreCase("Test")).thenReturn(null);
         try {
             mockMvc.perform(post("/users/Test/stops").contentType(MediaType.APPLICATION_JSON)
                     .content("{\"stopId\":\"12_B\"}"));
