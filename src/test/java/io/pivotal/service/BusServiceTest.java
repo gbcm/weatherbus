@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
 import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
-import io.pivotal.model.StopInfo;
+import io.pivotal.service.response.StopInfo;
+import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.response.StopsForLocationResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +37,13 @@ public class BusServiceTest {
                 ArrivalsAndDeparturesForStopResponse.class);
         when(mockService.getDeparturesForStop(stopId)).thenReturn(response);
 
-        List<Departure> expectedDepartures = new ArrayList<Departure>() {{
-            add(new Departure("31", "CENTRAL MAGNOLIA FREMONT", 1453317145000L, 1453317145000L));
-            add(new Departure("855", "Lynnwood", 0, 1516561850000L));
-            add(new Departure("32", "SEATTLE CENTER FREMONT", 1516563660000L, 1516563660000L));
+        List<DepartureResponse> expectedDepartureResponses = new ArrayList<DepartureResponse>() {{
+            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1453317145000L, 1453317145000L));
+            add(new DepartureResponse("855", "Lynnwood", 0, 1516561850000L));
+            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 1516563660000L, 1516563660000L));
         }};
 
-        assertEquals(expectedDepartures, subject.getDeparturesForStop("12345"));
+        assertEquals(expectedDepartureResponses, subject.getDeparturesForStop("12345"));
     }
 
     @Test

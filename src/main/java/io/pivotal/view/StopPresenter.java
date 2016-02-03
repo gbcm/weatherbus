@@ -4,9 +4,6 @@ import io.pivotal.domain.BusStop;
 import lombok.Data;
 import lombok.ToString;
 
-/**
- * Created by pivotal on 1/14/16.
- */
 @Data
 @ToString
 public class StopPresenter extends JsonPresenter {

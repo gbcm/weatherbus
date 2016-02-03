@@ -1,6 +1,6 @@
 package io.pivotal.view;
 
-import io.pivotal.model.StopInfo;
+import io.pivotal.service.response.StopInfo;
 import lombok.Data;
 
 @Data

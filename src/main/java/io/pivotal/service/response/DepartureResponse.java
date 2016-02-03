@@ -1,25 +1,21 @@
-package io.pivotal.service;
+package io.pivotal.service.response;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
-public class Departure {
-    @SerializedName("routeShortName")
+public class DepartureResponse {
     String routeShortName;
 
-    @SerializedName("tripHeadsign")
     String headsign;
 
-    @SerializedName("predictedDepartureTime")
     long predictedTime;
 
-    @SerializedName("scheduledDepartureTime")
     long scheduledTime;
 
-    public Departure() {}
+    public DepartureResponse() {}
 
-    public Departure(String routeShortName, String headsign, long predictedTime, long scheduledTime) {
+    public DepartureResponse(String routeShortName, String headsign, long predictedTime, long scheduledTime) {
         this.routeShortName = routeShortName;
         this.headsign = headsign;
         this.predictedTime = predictedTime;

@@ -3,8 +3,7 @@ package io.pivotal.controller;
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
-import io.pivotal.service.Departure;
-import io.pivotal.service.IRetrofitWeatherService;
+import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.WeatherService;
 import io.pivotal.service.response.ForecastResponse;
 import io.pivotal.service.response.TemperatureResponse;
@@ -28,7 +27,7 @@ public class WeatherBusController {
 
     @RequestMapping("")
     public @ResponseBody String getWeatherBus(@RequestParam String stopId) throws Exception {
-        List<Departure> departures = busService.getDeparturesForStop(stopId);
+        List<DepartureResponse> departureResponses = busService.getDeparturesForStop(stopId);
         Coordinate coordinate = busService.getCoordinatesForStop(stopId);
 
         ForecastResponse forecastResponse = weatherService.getForecast(coordinate);
@@ -42,24 +41,24 @@ public class WeatherBusController {
 
         List<DepartureWithTemperature> dwt = new ArrayList<>();
 
-        for (Departure departure : departures) {
-            long departureTimeMs = departure.getPredictedTime();
+        for (DepartureResponse departureResponse : departureResponses) {
+            long departureTimeMs = departureResponse.getPredictedTime();
             if (departureTimeMs == 0) {
-                departureTimeMs = departure.getScheduledTime();
+                departureTimeMs = departureResponse.getScheduledTime();
             }
 
             for (Map.Entry<Date, Double> temp : forecast.entrySet()) {
                 if (departureTimeMs < temp.getKey().getTime()) {
-                    dwt.add(new DepartureWithTemperature(departure, temp.getValue()));
+                    dwt.add(new DepartureWithTemperature(departureResponse, temp.getValue()));
                     break;
                 }
             }
         }
 
         double lastTemp = forecast.get(forecast.lastKey());
-        List<Departure> remainingDepartures = departures.subList(dwt.size(), departures.size());
-        for (Departure departure : remainingDepartures) {
-            dwt.add(new DepartureWithTemperature(departure, lastTemp));
+        List<DepartureResponse> remainingDepartureResponses = departureResponses.subList(dwt.size(), departureResponses.size());
+        for (DepartureResponse departureResponse : remainingDepartureResponses) {
+            dwt.add(new DepartureWithTemperature(departureResponse, lastTemp));
         }
 
         return new WeatherBusPresenter(coordinate.getLatitude(), coordinate.getLongitude(), stopId, dwt).toJson();
