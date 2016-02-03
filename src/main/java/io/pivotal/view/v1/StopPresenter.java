@@ -1,17 +1,17 @@
-package io.pivotal.view;
+package io.pivotal.view.v1;
 
-import io.pivotal.service.response.StopInfo;
+import io.pivotal.service.response.StopResponse;
 import lombok.Data;
 
 @Data
-public class StopInfoPresenter extends JsonPresenter {
+public class StopPresenter {
     private String id;
     private String name;
     private double latitude;
     private double longitude;
 
-    public StopInfoPresenter(StopInfo stop) {
-        id = stop.getId();
+    public StopPresenter(StopResponse stop){
+        id = stop.getStopId();
         name = stop.getName();
         latitude = stop.getLatitude();
         longitude = stop.getLongitude();

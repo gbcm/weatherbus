@@ -40,7 +40,7 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
     static class DevConfig {
         @Bean
         public IRetrofitBusService getBusService() {
-            return createBusService(Constants.ONEBUSAWAY_ENDPOINT);
+            return createBusService(Constants.BUS_SERVICE_ENDPOINT);
         }
 
         @Bean
@@ -53,7 +53,7 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
     static class CloudConfig {
         @Bean
         public IRetrofitBusService getBusService() {
-            return createBusService(Constants.ONEBUSAWAY_ENDPOINT);
+            return createBusService(Constants.BUS_SERVICE_ENDPOINT);
         }
 
         @Bean

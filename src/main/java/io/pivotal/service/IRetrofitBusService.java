@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface IRetrofitBusService {
     @GET("/v1/departures")
-    List<DepartureResponse> getDepartures(@Query("stopId") String stopId);
+    DeparturesCollectionResponse getDepartures(@Query("stopId") String stopId);
 
     @GET("/v1/coordinates")
-    CoordinatesResponse getCoordinates(@Query("stopId") String stopId);
+    SingleStopResponse getStopForId(@Query("stopId") String stopId);
 
     @GET("/v1/stops")
-    List<StopResponse> getStops(@Query("lat") double lat, @Query("lng") double lng,
-                                @Query("latSpan") double latSpan, @Query("lngSpan") double lngSpan);
+    StopsCollectionResponse getStops(@Query("lat") double lat, @Query("lng") double lng,
+                                     @Query("latSpan") double latSpan, @Query("lngSpan") double lngSpan);
 }

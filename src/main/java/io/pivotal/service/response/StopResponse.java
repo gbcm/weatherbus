@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class StopResponse {
-    private String id;
-    private String name;
-    private double latitude;
-    private double longitude;
+    private final String stopId;
+    private final String name;
+    private final double latitude;
+    private final double longitude;
 }

@@ -1,15 +1,16 @@
 package io.pivotal.controller.v1;
 
+import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
-import io.pivotal.service.response.StopInfo;
 import io.pivotal.service.BusService;
-import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.WeatherService;
+import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.response.ForecastResponse;
+import io.pivotal.service.response.StopResponse;
 import io.pivotal.service.response.TemperatureResponse;
-import io.pivotal.view.StopInfoPresenter;
 import io.pivotal.view.WeatherBusPresenter;
+import io.pivotal.view.v1.StopPresenter;
 import io.pivotal.view.v1.StopsCollectionPresenter;
 import io.pivotal.view.v1.StopsObjectPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +34,19 @@ public class StopsController {
     private WeatherService weatherService;
 
     @RequestMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-    public @ResponseBody String getStopsForCoordinate(
-            @RequestParam(name = "lat", required=false, defaultValue="47.653435") double lat,
-            @RequestParam(name = "lng", required=false, defaultValue="-122.305641") double lng,
-            @RequestParam(name = "latSpan", required=false, defaultValue="0.01") double latSpan,
-            @RequestParam(name = "lngSpan", required=false, defaultValue="0.01") double lngSpan)
+    public
+    @ResponseBody
+    String getStopsForCoordinate(
+            @RequestParam(name = "lat", required = false, defaultValue = "47.653435") double lat,
+            @RequestParam(name = "lng", required = false, defaultValue = "-122.305641") double lng,
+            @RequestParam(name = "latSpan", required = false, defaultValue = "0.01") double latSpan,
+            @RequestParam(name = "lngSpan", required = false, defaultValue = "0.01") double lngSpan)
             throws UnknownServiceException {
-        List<StopInfo> stops = busService.getStops(new Coordinate(lat,lng), latSpan, lngSpan);
-        List<StopInfoPresenter> presenters = new ArrayList<>();
+        List<StopResponse> stops = busService.getStops(new Coordinate(lat, lng), latSpan, lngSpan);
+        List<StopPresenter> presenters = new ArrayList<>();
 
-        for (StopInfo stop: stops) {
-            presenters.add(new StopInfoPresenter(stop));
+        for (StopResponse stop : stops) {
+            presenters.add(new StopPresenter(stop));
         }
 
         return new StopsCollectionPresenter(presenters).toJson();
@@ -52,46 +55,53 @@ public class StopsController {
     @RequestMapping(path = "/{stopId}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public
     @ResponseBody
-    String getWeatherBus(@PathVariable String stopId) throws UnknownServiceException {
+    String getWeatherBus(@PathVariable String stopId) throws UnknownServiceException, StopNotFoundException {
         List<DepartureResponse> departureResponses = busService.getDepartures(stopId);
         Coordinate coordinate = busService.getCoordinates(stopId);
 
-        ForecastResponse forecastResponse = weatherService.getForecast(coordinate);
         TemperatureResponse temperatureResponse = weatherService.getTemperature(coordinate);
+        ForecastResponse forecastResponse = weatherService.getForecast(coordinate);
 
-        SortedMap<Date, Double> forecast = new TreeMap<>();
-        forecast.put(new Date(), temperatureResponse.getTemp());
-        for (ForecastResponse.TimedTemp tt : forecastResponse.getForecast()) {
-            forecast.put(new Date(tt.getTimeInMillisec() * 1000), tt.getTemp());
-        }
-
-        List<DepartureWithTemperature> dwt = new ArrayList<>();
-
-        for (DepartureResponse departureResponse : departureResponses) {
-            long departureTimeMs = departureResponse.getPredictedTime();
-            if (departureTimeMs == 0) {
-                departureTimeMs = departureResponse.getScheduledTime();
-            }
-
-            for (Map.Entry<Date, Double> temp : forecast.entrySet()) {
-                if (departureTimeMs < temp.getKey().getTime()) {
-                    dwt.add(new DepartureWithTemperature(departureResponse, temp.getValue()));
-                    break;
-                }
-            }
-        }
-
-        double lastTemp = forecast.get(forecast.lastKey());
-        List<DepartureResponse> remainingDepartureResponses = departureResponses.subList(dwt.size(), departureResponses.size());
-        for (DepartureResponse departureResponse : remainingDepartureResponses) {
-            dwt.add(new DepartureWithTemperature(departureResponse, lastTemp));
-        }
-
+        List<DepartureWithTemperature> dwt = getDepartureWithTemperatures(departureResponses, temperatureResponse, forecastResponse);
         return new StopsObjectPresenter(
                 new WeatherBusPresenter(coordinate.getLatitude(),
-                        coordinate.getLongitude(),
-                        stopId,
-                        dwt)
+                coordinate.getLongitude(),
+                stopId,
+                dwt)
         ).toJson();
+    }
+
+    private List<DepartureWithTemperature> getDepartureWithTemperatures(List<DepartureResponse> departureResponses, TemperatureResponse temperatureResponse, ForecastResponse forecastResponse) {
+        List<ForecastResponse.TimedTemp> timedTemps = forecastResponse.getForecast();
+        final ForecastResponse.TimedTemp currentTimedTemp = new ForecastResponse.TimedTemp(
+                Math.floorDiv((new Date()).getTime(), 1000),
+                temperatureResponse.getTemp());
+        timedTemps.sort((o1, o2) -> (int) (o1.getTimeInSeconds() - o2.getTimeInSeconds()));
+
+        List<DepartureWithTemperature> dwt = new ArrayList<>();
+        for (DepartureResponse departure : departureResponses) {
+            ForecastResponse.TimedTemp lastTimedTemp = currentTimedTemp;
+            boolean foundForecast = false;
+            for (ForecastResponse.TimedTemp timedTemp : timedTemps) {
+                long departureTime = Math.floorDiv(departure.getPredictedTime(), 1000);
+                if (departureTime == 0) {
+                    departureTime = Math.floorDiv(departure.getScheduledTime(), 1000);
+                }
+                if (timedTemp.getTimeInSeconds() > departureTime) {
+                    dwt.add(new DepartureWithTemperature(
+                            departure, lastTimedTemp.getTemp()
+                    ));
+                    foundForecast = true;
+                    break;
+                }
+                lastTimedTemp = timedTemp;
+            }
+            if (!foundForecast) {
+                dwt.add(new DepartureWithTemperature(
+                        departure, lastTimedTemp.getTemp()
+                ));
+            }
+        }
+        return dwt;
     }
 }

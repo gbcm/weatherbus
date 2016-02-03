@@ -5,6 +5,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class StopsForLocationResponse {
-    List<StopResponse> data;
+public class StopsCollectionResponse {
+    private final List<StopResponse> data;
 }

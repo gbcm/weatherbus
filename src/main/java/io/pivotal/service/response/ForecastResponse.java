@@ -12,9 +12,9 @@ public class ForecastResponse {
     private List<TimedTemp> forecast;
 
     @Data
-    public class TimedTemp {
+    public static class TimedTemp {
         @SerializedName("time_epoch")
-        private long timeInMillisec;
-        private double temp;
+        private final long timeInSeconds;
+        private final double temp;
     }
 }
