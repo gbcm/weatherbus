@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
 import io.pivotal.service.BusService;
-import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.WeatherService;
+import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.response.ForecastResponse;
 import io.pivotal.service.response.StopResponse;
 import io.pivotal.service.response.TemperatureResponse;
@@ -27,9 +27,7 @@ import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(MockitoJUnitRunner.class)

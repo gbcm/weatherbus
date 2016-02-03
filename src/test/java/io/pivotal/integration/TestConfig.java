@@ -2,12 +2,12 @@ package io.pivotal.integration;
 
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
-import io.pivotal.service.*;
+import io.pivotal.service.IRetrofitBusService;
+import io.pivotal.service.IRetrofitWeatherService;
 import io.pivotal.service.response.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import retrofit.http.Path;
 import retrofit.http.Query;
 
 import java.io.FileNotFoundException;

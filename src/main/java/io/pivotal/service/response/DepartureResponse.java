@@ -1,6 +1,5 @@
 package io.pivotal.service.response;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data

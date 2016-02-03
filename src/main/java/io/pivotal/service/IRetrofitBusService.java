@@ -1,11 +1,11 @@
 package io.pivotal.service;
 
-import io.pivotal.service.response.*;
+import io.pivotal.service.response.DeparturesCollectionResponse;
+import io.pivotal.service.response.SingleStopResponse;
+import io.pivotal.service.response.StopsCollectionResponse;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
-
-import java.util.List;
 
 public interface IRetrofitBusService {
     @GET("/v1/departures")
