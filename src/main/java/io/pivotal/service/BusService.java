@@ -2,68 +2,56 @@ package io.pivotal.service;
 
 import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
-import io.pivotal.model.StopInfo;
-import io.pivotal.service.response.StopsForLocationResponse;
+import io.pivotal.service.response.DepartureResponse;
+import io.pivotal.service.response.SingleStopResponse;
+import io.pivotal.service.response.StopResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import retrofit.RetrofitError;
 
-import java.net.UnknownServiceException;
 import java.util.List;
 
 @Component
 public class BusService {
+    private IRetrofitBusService busService;
+
     @Autowired
-    IOneBusAwayService service;
+    public BusService(IRetrofitBusService busService) {
+        this.busService = busService;
+    }
 
-    public List<Departure> getDeparturesForStop(String stopId) throws UnknownServiceException {
+    public List<DepartureResponse> getDepartures(String stopId) {
+        return busService.getDepartures(stopId).getData();
+    }
+
+    public Coordinate getCoordinates(String stopId) throws StopNotFoundException {
         try {
-            ArrivalsAndDeparturesForStopResponse response = service
-                    .getDeparturesForStop(stopId);
-            return response.getData().getEntry().getDepartures();
-        }
-        catch (RetrofitError e) {
-            e.printStackTrace();
-            throw new UnknownServiceException(e.getMessage());
+            SingleStopResponse ssr = busService.getStopForId(stopId);
+            return new Coordinate(ssr.getData().getLatitude(), ssr.getData().getLongitude());
+        } catch (RetrofitError e) {
+            throw new StopNotFoundException();
         }
     }
 
-    public Coordinate getCoordinatesForStop(String stopId) throws UnknownServiceException {
+    public String getStopName(String stopId) throws StopNotFoundException {
         try {
-            StopResponse response = service
-                    .getCoordinatesForStop(stopId);
-            return response.getCoordinates();
-        }
-        catch (RetrofitError e) {
-            e.printStackTrace();
-            throw new UnknownServiceException(e.getMessage());
+            SingleStopResponse ssr = busService.getStopForId(stopId);
+            return ssr.getData().getName();
+        } catch (RetrofitError e) {
+            throw new StopNotFoundException();
         }
     }
 
-    public String getStopName(String stopId) throws UnknownServiceException, StopNotFoundException {
-        try {
-            StopResponse response = service
-                    .getCoordinatesForStop(stopId);
-            if (response == null || response.getData() == null) {
-                throw new StopNotFoundException();
-            }
-            return response.getData().getEntry().getName();
-        }
-        catch (RetrofitError e) {
-            e.printStackTrace();
-            throw new UnknownServiceException(e.getMessage());
-        }
+    public List<StopResponse> getStops(Coordinate coord,
+                                       double latSpan,
+                                       double lngSpan) {
+        return busService.getStops(
+                coord.getLatitude(),
+                coord.getLongitude(),
+                latSpan,
+                lngSpan)
+                .getData();
     }
 
-    public List<StopInfo> getStopsForCoordinate(Coordinate coordinate, double latSpan, double lngSpan) throws UnknownServiceException {
-        try {
-            StopsForLocationResponse response = service
-                    .getStopsForLocation(coordinate.getLatitude(), coordinate.getLongitude(),
-                            latSpan, lngSpan);
-            return response.getData().getStops();
-        } catch(RetrofitError e) {
-            e.printStackTrace();
-            throw new UnknownServiceException(e.getMessage());
-        }
-    }
+
 }

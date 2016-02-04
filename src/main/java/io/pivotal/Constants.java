@@ -5,6 +5,5 @@ package io.pivotal;
  */
 public class Constants {
     public static final String WEATHER_SERVICE_ENDPOINT = "http://weatherbus-weather-dev.cfapps.io/api";
-    public static final String ONEBUSAWAY_ENDPOINT = "http://api.pugetsound.onebusaway.org";
-    public static final String ONEBUSAWAY_KEY = "TEST";
+    public static final String BUS_SERVICE_ENDPOINT = "http://weatherbus-bus-dev.cfapps.io/api";
 }

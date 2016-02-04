@@ -2,14 +2,12 @@ package io.pivotal.integration;
 
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
-import io.pivotal.service.*;
-import io.pivotal.service.response.ForecastResponse;
-import io.pivotal.service.response.StopsForLocationResponse;
-import io.pivotal.service.response.TemperatureResponse;
+import io.pivotal.service.IRetrofitBusService;
+import io.pivotal.service.IRetrofitWeatherService;
+import io.pivotal.service.response.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import retrofit.http.Path;
 import retrofit.http.Query;
 
 import java.io.FileNotFoundException;
@@ -18,16 +16,16 @@ import java.io.FileNotFoundException;
 @Profile("test")
 public class TestConfig {
     @Bean
-    public IOneBusAwayService getOneBusAwayService() {
-        return new IOneBusAwayService() {
+    public IRetrofitBusService getOneBusAwayService() {
+        return new IRetrofitBusService() {
             Gson gson = new Gson();
-            @Override
-            public ArrivalsAndDeparturesForStopResponse getDeparturesForStop(@Path("stop") String stopId) {
 
+            @Override
+            public DeparturesCollectionResponse getDepartures(@Query("stopId") String stopId) {
                 try {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("DeparturesForStop"),
-                            ArrivalsAndDeparturesForStopResponse.class);
+                            DeparturesCollectionResponse.class);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -35,16 +33,23 @@ public class TestConfig {
             }
 
             @Override
-            public StopResponse getCoordinatesForStop(@Path("stop") String stopId) {
-                return new StopResponseBuilder().build();
+            public SingleStopResponse getStopForId(@Query("stopId") String stopId) {
+                try {
+                    return gson.fromJson(
+                            TestUtilities.fixtureReader("StopInfo"),
+                            SingleStopResponse.class);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
 
             @Override
-            public StopsForLocationResponse getStopsForLocation(@Query("lat") double lat, @Query("lon") double lng, @Query("latSpan") double latSpan, @Query("lonSpan") double lngSpan) {
+            public StopsCollectionResponse getStops(@Query("lat") double lat, @Query("lng") double lng, @Query("latSpan") double latSpan, @Query("lngSpan") double lngSpan) {
                 try {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("StopsForLocation"),
-                            StopsForLocationResponse.class);
+                            StopsCollectionResponse.class);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

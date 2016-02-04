@@ -2,7 +2,7 @@ package io.pivotal.config;
 
 import com.google.gson.Gson;
 import io.pivotal.Constants;
-import io.pivotal.service.IOneBusAwayService;
+import io.pivotal.service.IRetrofitBusService;
 import io.pivotal.service.IRetrofitWeatherService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +22,11 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
         return adapter.create(IRetrofitWeatherService.class);
     }
 
-    private static IOneBusAwayService createBusService(String host) {
+    private static IRetrofitBusService createBusService(String host) {
         RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(host);
         builder.setClient(new OkClient());
         RestAdapter adapter = builder.build();
-        return adapter.create(IOneBusAwayService.class);
+        return adapter.create(IRetrofitBusService.class);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
     @Profile("default")
     static class DevConfig {
         @Bean
-        public IOneBusAwayService getOneBusAwayService() {
-            return createBusService(Constants.ONEBUSAWAY_ENDPOINT);
+        public IRetrofitBusService getBusService() {
+            return createBusService(Constants.BUS_SERVICE_ENDPOINT);
         }
 
         @Bean
@@ -52,8 +52,8 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
     @Profile("cloud")
     static class CloudConfig {
         @Bean
-        public IOneBusAwayService getOneBusAwayService() {
-            return createBusService(Constants.ONEBUSAWAY_ENDPOINT);
+        public IRetrofitBusService getBusService() {
+            return createBusService(Constants.BUS_SERVICE_ENDPOINT);
         }
 
         @Bean

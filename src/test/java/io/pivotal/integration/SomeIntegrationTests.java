@@ -34,23 +34,16 @@ public class SomeIntegrationTests {
     }
 
     @Test
-    public void testGetCoordinates() throws Exception {
-        mockMvc.perform(get("/buses/coordinates?stopId=1_75403")).andExpect(
-                json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/output/StopCoordinates.json")));
-    }
-
-    @Test
     public void testGetWB() throws Exception {
-        mockMvc.perform(get("/wb?stopId=1_75403")).andExpect(
+        mockMvc.perform(get("/api/v1/stops/1_75403")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/output/WeatherBusResponse.json")));
+                        "src/test/resources/v1/output/StopsObjectResponse.json")));
     }
 
     @Test
     public void testGetStopsForLocation() throws Exception {
-        mockMvc.perform(get("/buses/stops?lat=47.653435&lng=122.305641&latSpan=0.01&lngSpan=0.01")).andExpect(
+        mockMvc.perform(get("/api/v1/stops?lat=47.653435&lng=122.305641&latSpan=0.01&lngSpan=0.01")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/output/StopsForCoordinate.json")));
+                        "src/test/resources/v1/output/StopsCollectionResponse.json")));
     }
 }

@@ -2,13 +2,12 @@ package io.pivotal.controller.v1;
 
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
-import io.pivotal.controller.WeatherBusController;
 import io.pivotal.model.Coordinate;
-import io.pivotal.model.StopInfo;
 import io.pivotal.service.BusService;
-import io.pivotal.service.Departure;
 import io.pivotal.service.WeatherService;
+import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.response.ForecastResponse;
+import io.pivotal.service.response.StopResponse;
 import io.pivotal.service.response.TemperatureResponse;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,13 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,10 +60,10 @@ public class StopsControllerTest {
         double longitude = -122.3332;
         Coordinate coordinate = new Coordinate(latitude, longitude);
 
-        List<Departure> departures = new ArrayList<Departure>() {{
-            add(new Departure("31", "CENTRAL MAGNOLIA FREMONT", 1453317145000L, 1453317145000L));
-            add(new Departure("855", "Lynnwood", 0, 1516561850000L));
-            add(new Departure("32", "SEATTLE CENTER FREMONT", 1516563660000L, 1516563660000L));
+        List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
+            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1896376792000L, 1896376792000L));
+            add(new DepartureResponse("855", "Lynnwood", 0, 1896376812000L));
+            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 0, 1896376852000L));
         }};
 
         ForecastResponse forecastResponse = gson.fromJson(
@@ -77,8 +73,8 @@ public class StopsControllerTest {
                 TestUtilities.fixtureReader("WeatherServiceTemp"),
                 TemperatureResponse.class);
 
-        when(busService.getDeparturesForStop(stopId)).thenReturn(departures);
-        when(busService.getCoordinatesForStop(stopId)).thenReturn(coordinate);
+        when(busService.getDepartures(stopId)).thenReturn(departureResponses);
+        when(busService.getCoordinates(stopId)).thenReturn(coordinate);
         when(weatherService.getForecast(coordinate)).thenReturn(forecastResponse);
         when(weatherService.getTemperature(coordinate)).thenReturn(temperatureResponse);
 
@@ -96,19 +92,11 @@ public class StopsControllerTest {
         double longitude = -122.305641;
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
-        List<StopInfo> stops = new ArrayList<StopInfo>() {{
-            add(new StopInfo());
-            get(0).setId("1_10914");
-            get(0).setLatitude(47.656422);
-            get(0).setLongitude(-122.312164);
-            get(0).setName("15th Ave NE & NE Campus Pkwy");
-            add(new StopInfo());
-            get(1).setId("1_10917");
-            get(1).setLatitude(47.655048);
-            get(1).setLongitude(-122.312195);
-            get(1).setName("15th Ave NE & NE 40th St");
+        List<StopResponse> stops = new ArrayList<StopResponse>() {{
+            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164));
+            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195));
         }};
-        when(busService.getStopsForCoordinate(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
+        when(busService.getStops(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
                 .thenReturn(stops);
 
         mockMvc.perform(get("/api/v1/stops?lat=" + latitude + "&lng=" + longitude + "&latSpan=" + latitudeSpan + "&lngSpan=" + longitudeSpan))
@@ -125,19 +113,11 @@ public class StopsControllerTest {
         double longitude = -122.305641;
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
-        List<StopInfo> stops = new ArrayList<StopInfo>() {{
-            add(new StopInfo());
-            get(0).setId("1_10914");
-            get(0).setLatitude(47.656422);
-            get(0).setLongitude(-122.312164);
-            get(0).setName("15th Ave NE & NE Campus Pkwy");
-            add(new StopInfo());
-            get(1).setId("1_10917");
-            get(1).setLatitude(47.655048);
-            get(1).setLongitude(-122.312195);
-            get(1).setName("15th Ave NE & NE 40th St");
+        List<StopResponse> stops = new ArrayList<StopResponse>() {{
+            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164));
+            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195));
         }};
-        when(busService.getStopsForCoordinate(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
+        when(busService.getStops(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
                 .thenReturn(stops);
 
         mockMvc.perform(get("/api/v1/stops"))

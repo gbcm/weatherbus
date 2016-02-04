@@ -1,14 +1,13 @@
 package io.pivotal.model;
 
-import com.google.gson.annotations.SerializedName;
-import io.pivotal.service.Departure;
+import io.pivotal.service.response.DepartureResponse;
 import lombok.Data;
 
 /**
  * Created by pivotal on 1/12/16.
  */
 @Data
-public class DepartureWithTemperature extends Departure {
+public class DepartureWithTemperature extends DepartureResponse {
     private double temp;
 
     public DepartureWithTemperature(String routeShortName, String headsign, long predictedTime, long scheduledTime, double temperature) {
@@ -16,7 +15,7 @@ public class DepartureWithTemperature extends Departure {
         this.temp = temperature;
     }
 
-    public DepartureWithTemperature(Departure departure, double temperature) {
-        this(departure.getRouteShortName(), departure.getHeadsign(), departure.getPredictedTime(), departure.getScheduledTime(), temperature);
+    public DepartureWithTemperature(DepartureResponse departureResponse, double temperature) {
+        this(departureResponse.getRouteShortName(), departureResponse.getHeadsign(), departureResponse.getPredictedTime(), departureResponse.getScheduledTime(), temperature);
     }
 }
