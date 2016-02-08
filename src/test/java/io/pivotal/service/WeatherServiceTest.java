@@ -23,7 +23,6 @@ public class WeatherServiceTest {
 
     @Test
     public void testGetForecastWrapsErrorsWithServiceCallName() {
-        when(mockService.getForecast(any(Double.class), any(Double.class))).thenThrow(RetrofitError.class
-        );
+        when(mockService.getForecast(any(Double.class), any(Double.class))).thenThrow(RetrofitError.class);
     }
 }

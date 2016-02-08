@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import retrofit.RetrofitError;
 
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
@@ -61,8 +62,13 @@ public class StopsController {
         List<DepartureResponse> departureResponses = busService.getDepartures(stopId);
         Coordinate coordinate = busService.getCoordinates(stopId);
 
-        TemperatureResponse temperatureResponse = weatherService.getTemperature(coordinate);
-        ForecastResponse forecastResponse = weatherService.getForecast(coordinate);
+        TemperatureResponse temperatureResponse = null;
+        ForecastResponse forecastResponse = null;
+        try {
+            temperatureResponse = weatherService.getTemperature(coordinate);
+            forecastResponse = weatherService.getForecast(coordinate);
+        } catch (RetrofitError retrofitError) {
+        }
 
         List<DepartureWithTemperature> dwt = getDepartureWithTemperatures(departureResponses, temperatureResponse, forecastResponse);
         return new StopsObjectPresenter(
@@ -73,13 +79,26 @@ public class StopsController {
         ).toJson();
     }
 
-    private List<DepartureWithTemperature> getDepartureWithTemperatures(List<DepartureResponse> departureResponses, TemperatureResponse temperatureResponse, ForecastResponse forecastResponse) {
-        List<ForecastResponse.TimedTemp> timedTemps = forecastResponse.getForecast();
-        final ForecastResponse.TimedTemp currentTimedTemp = new ForecastResponse.TimedTemp(
-                Math.floorDiv((new Date()).getTime(), 1000),
-                temperatureResponse.getTemp(),
-                temperatureResponse.getClimacon());
-        timedTemps.sort((o1, o2) -> (int) (o1.getTimeInSeconds() - o2.getTimeInSeconds()));
+    private List<DepartureWithTemperature> getDepartureWithTemperatures(
+            List<DepartureResponse> departureResponses,
+            TemperatureResponse temperatureResponse,
+            ForecastResponse forecastResponse)
+    {
+        List<ForecastResponse.TimedTemp> timedTemps = new ArrayList<>();
+        if (forecastResponse != null) {
+            timedTemps = forecastResponse.getForecast();
+            timedTemps.sort((o1, o2) -> (int) (o1.getTimeInSeconds() - o2.getTimeInSeconds()));
+        }
+
+        final ForecastResponse.TimedTemp currentTimedTemp;
+        if (temperatureResponse == null) {
+            currentTimedTemp = null;
+        } else {
+            currentTimedTemp = new ForecastResponse.TimedTemp(
+                    Math.floorDiv((new Date()).getTime(), 1000),
+                    temperatureResponse.getTemp(),
+                    temperatureResponse.getClimacon());
+        }
 
         List<DepartureWithTemperature> dwt = new ArrayList<>();
         for (DepartureResponse departure : departureResponses) {
@@ -99,10 +118,15 @@ public class StopsController {
                 }
                 lastTimedTemp = timedTemp;
             }
+
             if (!foundForecast) {
-                dwt.add(new DepartureWithTemperature(
-                        departure, lastTimedTemp.getTemp(), lastTimedTemp.getClimacon()
-                ));
+                if (lastTimedTemp != null) {
+                    dwt.add(new DepartureWithTemperature(
+                            departure, lastTimedTemp.getTemp(), lastTimedTemp.getClimacon()
+                    ));
+                } else {
+                    dwt.add(new DepartureWithTemperature(departure, null, null));
+                }
             }
         }
         return dwt;

@@ -16,9 +16,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.StatusResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.NestedServletException;
+import retrofit.RetrofitError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StopsControllerTest {
@@ -84,6 +89,57 @@ public class StopsControllerTest {
                         "stopsObject",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())));
+    }
+
+    @Test
+    public void testGetWeatherBusMissingWeather() throws Exception {
+        String stopId = "1_75403";
+        double latitude = 47.6098;
+        double longitude = -122.3332;
+        Coordinate coordinate = new Coordinate(latitude, longitude);
+
+        List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
+            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1896376792000L, 1896376792000L));
+            add(new DepartureResponse("855", "Lynnwood", 0, 1896376812000L));
+            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 0, 1896376852000L));
+        }};
+
+        when(busService.getDepartures(stopId)).thenReturn(departureResponses);
+        when(busService.getCoordinates(stopId)).thenReturn(coordinate);
+        when(weatherService.getForecast(coordinate)).thenThrow(RetrofitError.class);
+        when(weatherService.getTemperature(coordinate)).thenThrow(RetrofitError.class);
+
+        mockMvc.perform(get("/api/v1/stops/" + stopId))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsResponseNoTemperature.json")))
+                .andDo(document(
+                        "stopsObject",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void testGetWeatherBusRuntimeException() throws Throwable {
+        String stopId = "1_75403";
+        double latitude = 47.6098;
+        double longitude = -122.3332;
+        Coordinate coordinate = new Coordinate(latitude, longitude);
+
+        List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
+            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1896376792000L, 1896376792000L));
+            add(new DepartureResponse("855", "Lynnwood", 0, 1896376812000L));
+            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 0, 1896376852000L));
+        }};
+
+        when(busService.getDepartures(stopId)).thenReturn(departureResponses);
+        when(busService.getCoordinates(stopId)).thenReturn(coordinate);
+        when(weatherService.getForecast(coordinate)).thenThrow(ArithmeticException.class);
+        when(weatherService.getTemperature(coordinate)).thenThrow(ArithmeticException.class);
+
+        try {
+            mockMvc.perform(get("/api/v1/stops/" + stopId));
+        } catch (NestedServletException ex) {
+            throw ex.getCause();
+        }
     }
 
     @Test
