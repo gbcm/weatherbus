@@ -77,7 +77,8 @@ public class StopsController {
         List<ForecastResponse.TimedTemp> timedTemps = forecastResponse.getForecast();
         final ForecastResponse.TimedTemp currentTimedTemp = new ForecastResponse.TimedTemp(
                 Math.floorDiv((new Date()).getTime(), 1000),
-                temperatureResponse.getTemp());
+                temperatureResponse.getTemp(),
+                temperatureResponse.getClimacon());
         timedTemps.sort((o1, o2) -> (int) (o1.getTimeInSeconds() - o2.getTimeInSeconds()));
 
         List<DepartureWithTemperature> dwt = new ArrayList<>();
@@ -91,7 +92,7 @@ public class StopsController {
                 }
                 if (timedTemp.getTimeInSeconds() > departureTime) {
                     dwt.add(new DepartureWithTemperature(
-                            departure, lastTimedTemp.getTemp()
+                            departure, lastTimedTemp.getTemp(), lastTimedTemp.getClimacon()
                     ));
                     foundForecast = true;
                     break;
@@ -100,7 +101,7 @@ public class StopsController {
             }
             if (!foundForecast) {
                 dwt.add(new DepartureWithTemperature(
-                        departure, lastTimedTemp.getTemp()
+                        departure, lastTimedTemp.getTemp(), lastTimedTemp.getClimacon()
                 ));
             }
         }

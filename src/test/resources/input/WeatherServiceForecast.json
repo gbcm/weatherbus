@@ -4,10 +4,12 @@
   "forecast": [
     {
       "time_epoch": 1896376802,
+      "climacon": "http://weatherbus-weather-dev.cfapps.io/assets/Cloud-Sun.svg",
       "temp": 14.4
     },
     {
       "time_epoch": 1896376842,
+      "climacon": "http://weatherbus-weather-dev.cfapps.io/assets/Cloud-Rain.svg",
       "temp": 15.5
     }
   ]

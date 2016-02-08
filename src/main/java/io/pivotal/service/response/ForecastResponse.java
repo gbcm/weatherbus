@@ -16,5 +16,6 @@ public class ForecastResponse {
         @SerializedName("time_epoch")
         private final long timeInSeconds;
         private final double temp;
+        private final String climacon;
     }
 }
