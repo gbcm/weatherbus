@@ -5,3 +5,4 @@ applications:
   host: weatherbus-prime-dev
   path: ./build/libs/weatherbus-SNAPSHOT.jar
   buildpack: java_buildpack
+  timeout: 180
