@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class StopsCollectionResponse {
-    private final List<StopResponse> data;
+    private List<StopResponse> data;
 }
