@@ -1,6 +1,7 @@
 package io.pivotal.controller.v1;
 
 import com.google.gson.Gson;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
 import io.pivotal.service.BusService;
@@ -16,13 +17,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.StatusResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.NestedServletException;
-import retrofit.RetrofitError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StopsControllerTest {
@@ -108,8 +105,8 @@ public class StopsControllerTest {
 
         when(busService.getDepartures(stopId)).thenReturn(departureResponses);
         when(busService.getCoordinates(stopId)).thenReturn(coordinate);
-        when(weatherService.getForecast(coordinate)).thenThrow(RetrofitError.class);
-        when(weatherService.getTemperature(coordinate)).thenThrow(RetrofitError.class);
+        when(weatherService.getForecast(coordinate)).thenThrow(HystrixRuntimeException.class);
+        when(weatherService.getTemperature(coordinate)).thenThrow(HystrixRuntimeException.class);
 
         mockMvc.perform(get("/api/v1/stops/" + stopId))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsResponseNoTemperature.json")))

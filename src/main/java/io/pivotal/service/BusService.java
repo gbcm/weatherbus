@@ -1,5 +1,6 @@
 package io.pivotal.service;
 
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
 import io.pivotal.service.response.DepartureResponse;
@@ -7,7 +8,6 @@ import io.pivotal.service.response.SingleStopResponse;
 import io.pivotal.service.response.StopResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import retrofit.RetrofitError;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class BusService {
         try {
             SingleStopResponse ssr = busService.getStopForId(stopId);
             return new Coordinate(ssr.getData().getLatitude(), ssr.getData().getLongitude());
-        } catch (RetrofitError e) {
+        } catch (HystrixRuntimeException e) {
             throw new StopNotFoundException();
         }
     }
@@ -37,7 +37,7 @@ public class BusService {
         try {
             SingleStopResponse ssr = busService.getStopForId(stopId);
             return ssr.getData().getName();
-        } catch (RetrofitError e) {
+        } catch (HystrixRuntimeException e) {
             throw new StopNotFoundException();
         }
     }

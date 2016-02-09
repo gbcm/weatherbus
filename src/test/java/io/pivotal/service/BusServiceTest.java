@@ -1,6 +1,7 @@
 package io.pivotal.service;
 
 import com.google.gson.Gson;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import io.pivotal.TestUtilities;
 import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
@@ -10,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import retrofit.RetrofitError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class BusServiceTest {
     @Test(expected = StopNotFoundException.class)
     public void testGetCoordinates_invalidStopId() throws Throwable {
         String stopId = "bogus";
-        when(mockService.getStopForId(stopId)).thenThrow(RetrofitError.class);
+        when(mockService.getStopForId(stopId)).thenThrow(HystrixRuntimeException.class);
         subject.getCoordinates(stopId);
     }
 
@@ -83,7 +83,7 @@ public class BusServiceTest {
     @Test(expected = StopNotFoundException.class)
     public void testGetStopName_invalidStopId() throws Throwable {
         String stopId = "bogus";
-        when(mockService.getStopForId(stopId)).thenThrow(RetrofitError.class);
+        when(mockService.getStopForId(stopId)).thenThrow(HystrixRuntimeException.class);
         subject.getStopName(stopId);
     }
 

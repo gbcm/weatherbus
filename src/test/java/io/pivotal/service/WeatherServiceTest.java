@@ -1,11 +1,11 @@
 package io.pivotal.service;
 
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import retrofit.RetrofitError;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -23,6 +23,6 @@ public class WeatherServiceTest {
 
     @Test
     public void testGetForecastWrapsErrorsWithServiceCallName() {
-        when(mockService.getForecast(any(Double.class), any(Double.class))).thenThrow(RetrofitError.class);
+        when(mockService.getForecast(any(Double.class), any(Double.class))).thenThrow(HystrixRuntimeException.class);
     }
 }

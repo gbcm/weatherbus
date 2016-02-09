@@ -1,8 +1,5 @@
 package io.pivotal;
 
-import org.mockito.ArgumentMatcher;
-import retrofit.client.Request;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,19 +18,5 @@ public class TestUtilities {
         stream.forEach(x -> sb.append(x));
         stream.close();
         return sb.toString();
-    }
-
-    public static class RequestWithUrl extends ArgumentMatcher<Request> {
-        private String expectedUrl;
-
-        public RequestWithUrl(String expectedUrl) {
-            this.expectedUrl = expectedUrl;
-        }
-
-        @Override
-        public boolean matches(Object request) {
-            if (!(request instanceof Request)) return false;
-            return ((Request) request).getUrl().equals(expectedUrl);
-        }
     }
 }

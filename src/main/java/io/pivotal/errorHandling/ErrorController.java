@@ -1,12 +1,12 @@
 package io.pivotal.errorHandling;
 
 import com.google.gson.JsonSyntaxException;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import retrofit.RetrofitError;
 
 @ControllerAdvice
 public class ErrorController implements org.springframework.boot.autoconfigure.web.ErrorController {
@@ -53,13 +53,13 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
         return new ErrorPresenter(ErrorMessages.PARAM_OUT_OF_RANGE.getErrorMessage()).toJson();
     }
 
-    @ExceptionHandler({RetrofitError.class})
+    @ExceptionHandler({HystrixRuntimeException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @RequestMapping(ErrorPathConstants.ERROR_RETROFIT_CONFIG_PATH)
     public
     @ResponseBody
-    String errorRetrofitConfig(RetrofitError e) {
-        String message = "Error making service call to URL: " + e.getUrl() + " " + e.getMessage();
+    String errorRetrofitConfig(HystrixRuntimeException e) {
+        String message = "Error making service call: " + e.getMessage();
         logger.error(message, e);
         return new ErrorPresenter(ErrorMessages.RETROFIT.getErrorMessage()).toJson();
     }

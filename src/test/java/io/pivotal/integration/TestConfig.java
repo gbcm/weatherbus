@@ -8,7 +8,6 @@ import io.pivotal.service.response.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import retrofit.http.Query;
 
 import java.io.FileNotFoundException;
 
@@ -21,7 +20,7 @@ public class TestConfig {
             Gson gson = new Gson();
 
             @Override
-            public DeparturesCollectionResponse getDepartures(@Query("stopId") String stopId) {
+            public DeparturesCollectionResponse getDepartures(String stopId) {
                 try {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("DeparturesForStop"),
@@ -33,7 +32,7 @@ public class TestConfig {
             }
 
             @Override
-            public SingleStopResponse getStopForId(@Query("stopId") String stopId) {
+            public SingleStopResponse getStopForId(String stopId) {
                 try {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("StopInfo"),
@@ -45,7 +44,7 @@ public class TestConfig {
             }
 
             @Override
-            public StopsCollectionResponse getStops(@Query("lat") double lat, @Query("lng") double lng, @Query("latSpan") double latSpan, @Query("lngSpan") double lngSpan) {
+            public StopsCollectionResponse getStops(double lat, double lng, double latSpan, double lngSpan) {
                 try {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("StopsForLocation"),
@@ -63,7 +62,7 @@ public class TestConfig {
         return new IFeignWeatherService() {
             Gson gson = new Gson();
             @Override
-            public TemperatureResponse getTemperature(@Query("lat") double lat, @Query("lng") double lng) {
+            public TemperatureResponse getTemperature(double lat, double lng) {
                 try {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("WeatherServiceTemp"),
@@ -75,7 +74,7 @@ public class TestConfig {
             }
 
             @Override
-            public ForecastResponse getForecast(@Query("lat") double lat, @Query("lng") double lng) {
+            public ForecastResponse getForecast(double lat, double lng) {
                 try {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("WeatherServiceForecast"),

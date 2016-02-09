@@ -1,5 +1,6 @@
 package io.pivotal.controller.v1;
 
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import retrofit.RetrofitError;
 
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class StopsController {
         try {
             temperatureResponse = weatherService.getTemperature(coordinate);
             forecastResponse = weatherService.getForecast(coordinate);
-        } catch (RetrofitError retrofitError) {
+        } catch (HystrixRuntimeException e) {
         }
 
         List<DepartureWithTemperature> dwt = getDepartureWithTemperatures(departureResponses, temperatureResponse, forecastResponse);

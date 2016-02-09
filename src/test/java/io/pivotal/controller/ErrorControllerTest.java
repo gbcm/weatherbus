@@ -1,6 +1,7 @@
 package io.pivotal.controller;
 
 import com.google.gson.JsonSyntaxException;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import io.pivotal.TestUtilities;
 import io.pivotal.errorHandling.ErrorController;
 import io.pivotal.errorHandling.ErrorPathConstants;
@@ -11,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import retrofit.RetrofitError;
 
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.junit.Assert.assertEquals;
@@ -68,7 +68,7 @@ public class ErrorControllerTest {
 
     @Test
     public void testRetrofitFailure() throws Exception {
-        RetrofitError e = RetrofitError.unexpectedError("http://example.com/", new RuntimeException("nope!"));
+        HystrixRuntimeException e = new HystrixRuntimeException(null, null, "BROKEN", null, null);
         String expected = TestUtilities.jsonFileToString("src/test/resources/output/RetrofitError.json");
         assertEquals(expected, subject.errorRetrofitConfig(e));
 
