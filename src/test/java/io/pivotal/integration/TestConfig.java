@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
 import io.pivotal.service.IFeignWeatherService;
 import io.pivotal.service.IRetrofitBusService;
-import io.pivotal.service.IRetrofitWeatherService;
 import io.pivotal.service.response.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
