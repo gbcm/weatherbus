@@ -54,7 +54,9 @@ public class StopsControllerTest {
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(subject)
-                .apply(documentationConfiguration(this.restDocumentation))
+                .apply(documentationConfiguration(this.restDocumentation).uris()
+                    .withScheme("http")
+                    .withHost("weatherbus-prime-dev.cfapps.io"))
                 .build();
     }
 
