@@ -13,9 +13,17 @@ public class ForecastResponse {
 
     @Data
     public static class TimedTemp {
+
+        public TimedTemp() {}
+        public TimedTemp(long timeInSeconds, double temp, String climacon) {
+            this.timeInSeconds = timeInSeconds;
+            this.temp = temp;
+            this.climacon = climacon;
+        }
+
         @SerializedName("time_epoch")
-        private final long timeInSeconds;
-        private final double temp;
-        private final String climacon;
+        private long timeInSeconds;
+        private double temp;
+        private String climacon;
     }
 }

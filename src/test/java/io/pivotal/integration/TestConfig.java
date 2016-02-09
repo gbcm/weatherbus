@@ -2,6 +2,7 @@ package io.pivotal.integration;
 
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
+import io.pivotal.service.IFeignWeatherService;
 import io.pivotal.service.IRetrofitBusService;
 import io.pivotal.service.IRetrofitWeatherService;
 import io.pivotal.service.response.*;
@@ -59,8 +60,8 @@ public class TestConfig {
     }
 
     @Bean
-    public IRetrofitWeatherService getWeatherService() {
-        return new IRetrofitWeatherService() {
+    public IFeignWeatherService getWeatherService() {
+        return new IFeignWeatherService() {
             Gson gson = new Gson();
             @Override
             public TemperatureResponse getTemperature(@Query("lat") double lat, @Query("lng") double lng) {

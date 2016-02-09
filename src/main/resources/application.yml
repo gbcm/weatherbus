@@ -18,15 +18,31 @@ logging:
               BasicBinder: TRACE
 
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://127.0.0.1:8761}/eureka/
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+---
+spring:
+  profiles: default
+ribbon:
+  eureka:
+   enabled: false
+weatherbus-weather:
+  ribbon:
+    listOfServers: weatherbus-weather-dev.cfapps.io:80
 
 ---
 spring:
   profiles: cloud
 eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://127.0.0.1:8761}/eureka/
   instance:
     hostname: ${vcap.application.uris[0]}
     nonSecurePort: 80

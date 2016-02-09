@@ -4,14 +4,14 @@ import io.pivotal.model.Coordinate;
 import io.pivotal.service.response.ForecastResponse;
 import io.pivotal.service.response.TemperatureResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class WeatherService {
-    private IRetrofitWeatherService weatherService;
+    private IFeignWeatherService weatherService;
 
     @Autowired
-    public WeatherService(IRetrofitWeatherService weatherService) {
+    public WeatherService(IFeignWeatherService weatherService) {
         this.weatherService = weatherService;
     }
 

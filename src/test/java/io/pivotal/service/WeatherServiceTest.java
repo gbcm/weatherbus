@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WeatherServiceTest {
     @Mock
-    IRetrofitWeatherService mockService;
+    IFeignWeatherService mockService;
     WeatherService subject;
 
     @Before

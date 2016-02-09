@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import io.pivotal.Constants;
 import io.pivotal.service.IRetrofitBusService;
 import io.pivotal.service.IRetrofitWeatherService;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -37,6 +39,7 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
     }
 
     @Profile("default")
+    @EnableFeignClients(basePackages = "io.pivotal")
     static class DevConfig {
         @Bean
         public IRetrofitBusService getBusService() {
@@ -50,6 +53,8 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
     }
 
     @Profile("cloud")
+    @EnableEurekaClient
+    @EnableFeignClients(basePackages = "io.pivotal")
     static class CloudConfig {
         @Bean
         public IRetrofitBusService getBusService() {
