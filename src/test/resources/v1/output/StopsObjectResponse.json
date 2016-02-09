@@ -9,7 +9,8 @@
         "routeShortName": "31",
         "scheduledTime": 1896376792000,
         "temp": 36.2,
-        "climacon": "http://weatherbus-weather-dev.cfapps.io/assets/Sun.svg",
+        "climacon_url": "http://weatherbus-weather-dev.cfapps.io/assets/Sun.svg",
+        "climacon": "SUNNY",
         "headsign": "CENTRAL MAGNOLIA FREMONT"
       },
       {
@@ -17,7 +18,8 @@
         "routeShortName": "855",
         "scheduledTime": 1896376812000,
         "temp": 14.4,
-        "climacon": "http://weatherbus-weather-dev.cfapps.io/assets/Cloud-Sun.svg",
+        "climacon_url": "http://weatherbus-weather-dev.cfapps.io/assets/Cloud-Sun.svg",
+        "climacon": "CLOUDY",
         "headsign": "Lynnwood"
       },
       {
@@ -25,7 +27,8 @@
         "routeShortName": "32",
         "scheduledTime": 1896376852000,
         "temp": 15.5,
-        "climacon": "http://weatherbus-weather-dev.cfapps.io/assets/Cloud-Rain.svg",
+        "climacon_url": "http://weatherbus-weather-dev.cfapps.io/assets/Cloud-Rain.svg",
+        "climacon": "RAIN",
         "headsign": "SEATTLE CENTER FREMONT"
       }
     ]

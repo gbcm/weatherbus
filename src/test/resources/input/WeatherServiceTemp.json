@@ -1,6 +1,7 @@
 {
   "latitude": 47.6098,
   "longitude": -122.3332,
-  "climacon": "http://weatherbus-weather-dev.cfapps.io/assets/Sun.svg",
+  "climacon_url": "http://weatherbus-weather-dev.cfapps.io/assets/Sun.svg",
+  "climacon": "SUNNY",
   "temp": 36.2
 }

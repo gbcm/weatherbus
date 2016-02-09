@@ -97,6 +97,7 @@ public class StopsController {
             currentTimedTemp = new ForecastResponse.TimedTemp(
                     Math.floorDiv((new Date()).getTime(), 1000),
                     temperatureResponse.getTemp(),
+                    temperatureResponse.getClimacon_url(),
                     temperatureResponse.getClimacon());
         }
 
@@ -111,7 +112,10 @@ public class StopsController {
                 }
                 if (timedTemp.getTimeInSeconds() > departureTime) {
                     dwt.add(new DepartureWithTemperature(
-                            departure, lastTimedTemp.getTemp(), lastTimedTemp.getClimacon()
+                            departure,
+                            lastTimedTemp.getTemp(),
+                            lastTimedTemp.getClimacon_url(),
+                            lastTimedTemp.getClimacon()
                     ));
                     foundForecast = true;
                     break;
@@ -122,10 +126,13 @@ public class StopsController {
             if (!foundForecast) {
                 if (lastTimedTemp != null) {
                     dwt.add(new DepartureWithTemperature(
-                            departure, lastTimedTemp.getTemp(), lastTimedTemp.getClimacon()
+                            departure,
+                            lastTimedTemp.getTemp(),
+                            lastTimedTemp.getClimacon_url(),
+                            lastTimedTemp.getClimacon()
                     ));
                 } else {
-                    dwt.add(new DepartureWithTemperature(departure, null, null));
+                    dwt.add(new DepartureWithTemperature(departure, null, null, null));
                 }
             }
         }

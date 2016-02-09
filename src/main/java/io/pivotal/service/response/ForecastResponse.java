@@ -15,15 +15,17 @@ public class ForecastResponse {
     public static class TimedTemp {
 
         public TimedTemp() {}
-        public TimedTemp(long timeInSeconds, double temp, String climacon) {
+        public TimedTemp(long timeInSeconds, double temp, String climacon_url, String climacon) {
             this.timeInSeconds = timeInSeconds;
             this.temp = temp;
+            this.climacon_url = climacon_url;
             this.climacon = climacon;
         }
 
         @SerializedName("time_epoch")
         private long timeInSeconds;
         private double temp;
+        private String climacon_url;
         private String climacon;
     }
 }
