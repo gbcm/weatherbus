@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class DeparturesCollectionResponse {
-    private final List<DepartureResponse> data;
+    private List<DepartureResponse> data;
 }

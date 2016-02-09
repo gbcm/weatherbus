@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BusServiceTest {
     @Mock
-    IRetrofitBusService mockService;
+    IFeignBusService mockService;
     @InjectMocks
     BusService subject;
 

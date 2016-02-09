@@ -35,6 +35,9 @@ ribbon:
 weatherbus-weather:
   ribbon:
     listOfServers: weatherbus-weather-dev.cfapps.io:80
+weatherbus-bus:
+  ribbon:
+    listOfServers: weatherbus-bus-dev.cfapps.io:80
 
 ---
 spring:

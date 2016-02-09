@@ -1,11 +1,24 @@
 package io.pivotal.service.response;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+@Getter
+@ToString
+@EqualsAndHashCode
 public class StopResponse {
-    private final String stopId;
-    private final String name;
-    private final double latitude;
-    private final double longitude;
+    private String stopId;
+    private String name;
+    private double latitude;
+    private double longitude;
+
+    public StopResponse() {}
+
+    public StopResponse(String stopId, String name, double latitude, double longitude) {
+        this.stopId = stopId;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }

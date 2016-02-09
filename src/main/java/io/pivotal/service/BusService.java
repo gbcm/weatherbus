@@ -13,10 +13,10 @@ import java.util.List;
 
 @Component
 public class BusService {
-    private IRetrofitBusService busService;
+    private IFeignBusService busService;
 
     @Autowired
-    public BusService(IRetrofitBusService busService) {
+    public BusService(IFeignBusService busService) {
         this.busService = busService;
     }
 

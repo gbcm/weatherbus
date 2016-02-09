@@ -2,8 +2,8 @@ package io.pivotal.integration;
 
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
+import io.pivotal.service.IFeignBusService;
 import io.pivotal.service.IFeignWeatherService;
-import io.pivotal.service.IRetrofitBusService;
 import io.pivotal.service.response.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +16,8 @@ import java.io.FileNotFoundException;
 @Profile("test")
 public class TestConfig {
     @Bean
-    public IRetrofitBusService getOneBusAwayService() {
-        return new IRetrofitBusService() {
+    public IFeignBusService getOneBusAwayService() {
+        return new IFeignBusService() {
             Gson gson = new Gson();
 
             @Override
