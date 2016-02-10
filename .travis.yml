@@ -1,8 +1,19 @@
 language: java
+
 jdk:
 - oraclejdk8
+
 deploy:
-  provider: cloudfoundry
+- provider: s3
+  access_key_id: AKIAIBR6EYEZVQKM5CMQ
+  secret_access_key:
+    secure: FPBt5pHywMrDDPO8S00jufH6VWw35RfbW2ZfQAA7QVZ8xssNn+rTz/CUgkGJlrFa7DCYlgB3tdlJ+U6kBbzKmHY7dZSXjgzSh0w4CEha770cR/ENf4d3Rr9NkgIIoCTyx+8OBi+9prtFMoMdqSggG85GD9I5OtD5egH/pOL3ZyvZTTWTdX5JWTatqGOa8CmNnM6dk2/DWhRLIeBurHUxO1WmeqPSrOwj95Db/rh0xcD9K/IgyQ8hNlWrcoqLO0cV2BvqIbHe1VcVGrtvSUt/lH1mXorYB8N1eljfHPUNdF0I67VXBa6HFrccQfaipVRX4szRmbpXbT6f1zFqJH8b3BXWy+GdDLx9c4y3vs6xVaESX57k82sHH34+62n0TnIJ+abFe4+PluB0HI5jXdwUJ2Ei7baNmdivhkd+ng/GxMXwMK/M9Kz51p8rTAZGSYU5IaNVu4O3FhtK4qTMj1O+7X/tO4c/yRZQ/Ini49tlIjSeIYNiX4Ne4oeVWI9QX4HirS8KrH2NyVA8PKUgfaP7Ul6hUbO3NFXqme8wjFojQ5PDfHaDzkj8tZN0tawnzN1ZTBDFiApKxsBI7MPhVVynDYR6K/jHDVtXse5sPik0fliI4Hz39f+ilLt82qgn8xtgtGA+0hjJUGoxGftXy29zFjAJ+G4WTP5Ds/BYZEqHpJs=
+  bucket: weatherbus-travis-artifacts
+  local-dir: build/libs
+  acl: private
+  on:
+    repo: seattle-beach/weatherbus
+- provider: cloudfoundry
   api: https://api.run.pivotal.io
   username: achen@pivotal.io
   password:
@@ -12,9 +23,10 @@ deploy:
   on:
     repo: seattle-beach/weatherbus
     branch: master
+
 env:
   global:
     secure: Q3fd9ckUUuHPLpXoOPdXPF6nuNl9R4aVbgcVQnh6+hQ7B3FIC7mGOZSBYjyBHlSwyKzii2xhbZGWlnG4OJgEMcsIrWCc+eXwIn9afe8IY3ZFa/ZA6ChgxD4qLtWuKZjorK69IIxwd7+pwa08F3I70m1XvmZa8Oa7IiUQB8cw4AaxuhpsR1HYEk+m2+G6iNqw4KnNRBc1UZU7aZ5qH06Iugo2LRE7G9FtmyAs11d1n2M4jLNDMS+vhNOZiTHduhEcqhJzBkIjb6f1E/drjpY6Qp3E84GnvxvQQDeb2usI+2BUqyc+quircqYY0Bfy9QJXZxIscsdI4rbJF2WDQdgk3IZHyxstPF0Ey+85NWps2Uq99oPpn0LALm8a9j/Sgiq7Ed0wSDSKFESt7+iKmSeqKR+1tbYdHwKtYXcByY6QtFFaFbpG4lgK10llq5E/9a/vW8fec41ZMnGYzDz5JIWd5BepRwyilopg6P7vgI2PqZ+eGw3Wg/KX1D4nqT5v/pOvwVAjCfhE/LO3RqjLH33HiAIrX786WX3CrmxpETRgLUtyqKAqln4XmVfJ/DY8ZcviOVpgpzkeFP1MzUzKBQqJ0gi5XBfVEXZWQJkNK9cBM2x07pzr42SFgQ6uFfFOBq94C6LrkjvhbE0zfisOox3DTMf4XUR5/kNVH61NBJGK0Jc=
 
 after_deploy:
-  - ./run_integration.sh
+  - "./run_integration.sh"
