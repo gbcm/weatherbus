@@ -148,8 +148,8 @@ public class StopsControllerTest {
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
         List<StopResponse> stops = new ArrayList<StopResponse>() {{
-            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164));
-            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195));
+            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164, "S"));
+            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195, "S"));
         }};
         when(busService.getStops(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
                 .thenReturn(stops);
@@ -169,8 +169,8 @@ public class StopsControllerTest {
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
         List<StopResponse> stops = new ArrayList<StopResponse>() {{
-            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164));
-            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195));
+            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164, "S"));
+            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195, "S"));
         }};
         when(busService.getStops(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
                 .thenReturn(stops);

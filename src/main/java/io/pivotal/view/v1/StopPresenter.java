@@ -9,11 +9,13 @@ public class StopPresenter {
     private String name;
     private double latitude;
     private double longitude;
+    private String direction;
 
     public StopPresenter(StopResponse stop){
         id = stop.getStopId();
         name = stop.getName();
         latitude = stop.getLatitude();
         longitude = stop.getLongitude();
+        direction = stop.getDirection();
     }
 }
