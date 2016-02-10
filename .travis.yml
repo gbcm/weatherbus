@@ -12,3 +12,9 @@ deploy:
   on:
     repo: seattle-beach/weatherbus
     branch: master
+env:
+  global:
+    secure: Q3fd9ckUUuHPLpXoOPdXPF6nuNl9R4aVbgcVQnh6+hQ7B3FIC7mGOZSBYjyBHlSwyKzii2xhbZGWlnG4OJgEMcsIrWCc+eXwIn9afe8IY3ZFa/ZA6ChgxD4qLtWuKZjorK69IIxwd7+pwa08F3I70m1XvmZa8Oa7IiUQB8cw4AaxuhpsR1HYEk+m2+G6iNqw4KnNRBc1UZU7aZ5qH06Iugo2LRE7G9FtmyAs11d1n2M4jLNDMS+vhNOZiTHduhEcqhJzBkIjb6f1E/drjpY6Qp3E84GnvxvQQDeb2usI+2BUqyc+quircqYY0Bfy9QJXZxIscsdI4rbJF2WDQdgk3IZHyxstPF0Ey+85NWps2Uq99oPpn0LALm8a9j/Sgiq7Ed0wSDSKFESt7+iKmSeqKR+1tbYdHwKtYXcByY6QtFFaFbpG4lgK10llq5E/9a/vW8fec41ZMnGYzDz5JIWd5BepRwyilopg6P7vgI2PqZ+eGw3Wg/KX1D4nqT5v/pOvwVAjCfhE/LO3RqjLH33HiAIrX786WX3CrmxpETRgLUtyqKAqln4XmVfJ/DY8ZcviOVpgpzkeFP1MzUzKBQqJ0gi5XBfVEXZWQJkNK9cBM2x07pzr42SFgQ6uFfFOBq94C6LrkjvhbE0zfisOox3DTMf4XUR5/kNVH61NBJGK0Jc=
+
+after_deploy:
+  - ./run_integration.sh
