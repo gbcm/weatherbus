@@ -11,6 +11,7 @@ deploy:
   bucket: weatherbus-travis-artifacts
   local-dir: "./build/libs"
   acl: private
+  skip_cleanup: true
   on:
     repo: seattle-beach/weatherbus
 - provider: cloudfoundry
