@@ -1,8 +1,6 @@
 language: java
-
 jdk:
 - oraclejdk8
-
 deploy:
 - provider: s3
   access_key_id: AKIAIBR6EYEZVQKM5CMQ
@@ -24,10 +22,11 @@ deploy:
   on:
     repo: seattle-beach/weatherbus
     branch: master
-
 env:
   global:
     secure: Q3fd9ckUUuHPLpXoOPdXPF6nuNl9R4aVbgcVQnh6+hQ7B3FIC7mGOZSBYjyBHlSwyKzii2xhbZGWlnG4OJgEMcsIrWCc+eXwIn9afe8IY3ZFa/ZA6ChgxD4qLtWuKZjorK69IIxwd7+pwa08F3I70m1XvmZa8Oa7IiUQB8cw4AaxuhpsR1HYEk+m2+G6iNqw4KnNRBc1UZU7aZ5qH06Iugo2LRE7G9FtmyAs11d1n2M4jLNDMS+vhNOZiTHduhEcqhJzBkIjb6f1E/drjpY6Qp3E84GnvxvQQDeb2usI+2BUqyc+quircqYY0Bfy9QJXZxIscsdI4rbJF2WDQdgk3IZHyxstPF0Ey+85NWps2Uq99oPpn0LALm8a9j/Sgiq7Ed0wSDSKFESt7+iKmSeqKR+1tbYdHwKtYXcByY6QtFFaFbpG4lgK10llq5E/9a/vW8fec41ZMnGYzDz5JIWd5BepRwyilopg6P7vgI2PqZ+eGw3Wg/KX1D4nqT5v/pOvwVAjCfhE/LO3RqjLH33HiAIrX786WX3CrmxpETRgLUtyqKAqln4XmVfJ/DY8ZcviOVpgpzkeFP1MzUzKBQqJ0gi5XBfVEXZWQJkNK9cBM2x07pzr42SFgQ6uFfFOBq94C6LrkjvhbE0zfisOox3DTMf4XUR5/kNVH61NBJGK0Jc=
-
 after_deploy:
-  - "./run_integration.sh"
+- "./run_integration.sh"
+notifications:
+  slack:
+    secure: O3/eJrhraMJl90qOgQGWeOHhqZfxOo63xUyINGkISPsv0lkd8kAd64RLfNiuq6HP6Cf1r6Plxph3TwhRVI4fW31Dejh1MtQw/Ye5zrtnR1e7hdBfzuHaXhRhsWDLJyUG3Bs75ZCd5Y4kCSzadc9PinZTKvdc3dbhJe61z7cTMtVuuP/jyuBWwRX2gwn0VIwS4K3W/96TniV/iD+8uXMbgr0k5XCEnEt7zsh9yFenAYyYTai9QjgWtk+9RmFFJUNp+IIfLpopcutk6ab9ycKASWB1qMyBUs2JpVtJ+jCTet15DrJ3zuvL/Xn+/nk6ctHwoem4iQlwUr33sJf/IJiS+ERbj+0/BH9Xxn5Cr3WTp/iipBJ4lEcC0m+dVYas71muQ8D5O0dlKF5Tr2UohLUejhK0OQAtod3l/DwRfeRcDV4wi88N2Dha3vXUCX1PLXB89XJMTQjuR9uT3JoAL/2nFlytVIZPDVS8YDEPMRVLDieG9dGeQH/yWWy4+1sctusAU4tO3ixA1OGymuJMjDx3H8BJYlE0BxHWiy29zUZW5vjuAMRuefKSP+afv4oL0LhXS4+2+/6qZj3nbluu9iYmuRKNqu9lZ9aLLvo5BukFfPgAQox3XPVeRGaACC9J84kMFdjfZLciyI2t6yM3xqweqG4hb0MFqsMEKl5RGHkeCXA=
