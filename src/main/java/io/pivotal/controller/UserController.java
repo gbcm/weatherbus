@@ -14,6 +14,7 @@ import io.pivotal.view.JsonPresenter;
 import io.pivotal.view.StopPresenter;
 import io.pivotal.view.UserPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by pivotal on 1/12/16.
- */
 @RequestMapping("/users")
 @Controller
 public class UserController {
@@ -73,6 +71,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public
     @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
     String addUser(@RequestBody String usernameJson) throws Exception {
         Map<String, String> mapOfJson = gson.fromJson(usernameJson, HashMap.class);
         String nameOfParam = "username";

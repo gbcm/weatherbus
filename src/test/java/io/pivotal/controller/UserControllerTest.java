@@ -116,7 +116,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/users/").contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"Test\"}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         Mockito.verify(userRepository, times(1)).save(argThat(new isUserWithUserName("Test")));
     }
 
