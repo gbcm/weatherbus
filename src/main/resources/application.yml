@@ -41,6 +41,29 @@ weatherbus-bus:
 
 ---
 spring:
+  profiles: goldengardens
+  database:
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/wbpgg
+ribbon:
+  eureka:
+   enabled: false
+weatherbus-weather:
+  ribbon:
+    listOfServers: localhost:8001
+weatherbus-bus:
+  ribbon:
+    listOfServers: localhost:8002
+
+---
+spring:
   profiles: cloud
 eureka:
   client:
