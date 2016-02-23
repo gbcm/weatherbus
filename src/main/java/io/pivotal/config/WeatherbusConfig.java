@@ -22,6 +22,12 @@ public class WeatherbusConfig extends WebMvcConfigurerAdapter {
     static class DevConfig {
     }
 
+    @Profile("goldengardens")
+    @EnableFeignClients(basePackages = "io.pivotal")
+    static class GoldenGardensConfig {
+
+    }
+
     @Profile("cloud")
     @EnableEurekaClient
     @EnableFeignClients(basePackages = "io.pivotal")
