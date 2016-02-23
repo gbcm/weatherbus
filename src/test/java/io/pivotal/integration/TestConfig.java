@@ -3,11 +3,13 @@ package io.pivotal.integration;
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
 import io.pivotal.service.IFeignBusService;
+import io.pivotal.service.IFeignCrimeService;
 import io.pivotal.service.IFeignWeatherService;
 import io.pivotal.service.response.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.FileNotFoundException;
 
@@ -79,6 +81,24 @@ public class TestConfig {
                     return gson.fromJson(
                             TestUtilities.fixtureReader("WeatherServiceForecast"),
                             ForecastResponse.class);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+    }
+
+    @Bean
+    public IFeignCrimeService getCrimeService() {
+        return new IFeignCrimeService() {
+            Gson gson = new Gson();
+            @Override
+            public CrimeResponse getCrimeInfo(@RequestParam("lat") double latitude, @RequestParam("lng") double longitude) {
+                try {
+                    return gson.fromJson(
+                            TestUtilities.fixtureReader("CrimeInfo"),
+                            CrimeResponse.class);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

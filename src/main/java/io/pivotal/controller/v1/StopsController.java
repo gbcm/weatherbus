@@ -5,12 +5,11 @@ import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
 import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
+import io.pivotal.service.CrimeService;
 import io.pivotal.service.WeatherService;
-import io.pivotal.service.response.DepartureResponse;
-import io.pivotal.service.response.ForecastResponse;
-import io.pivotal.service.response.StopResponse;
-import io.pivotal.service.response.TemperatureResponse;
+import io.pivotal.service.response.*;
 import io.pivotal.view.WeatherBusPresenter;
+import io.pivotal.view.v1.CrimePresenter;
 import io.pivotal.view.v1.StopPresenter;
 import io.pivotal.view.v1.StopsCollectionPresenter;
 import io.pivotal.view.v1.StopsObjectPresenter;
@@ -35,6 +34,8 @@ public class StopsController {
     private BusService busService;
     @Autowired
     private WeatherService weatherService;
+    @Autowired
+    private CrimeService crimeService;
 
     @RequestMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public
@@ -53,6 +54,14 @@ public class StopsController {
         }
 
         return new StopsCollectionPresenter(presenters).toJson();
+    }
+
+    @RequestMapping(path = "/crime", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public
+    @ResponseBody
+    String getNumberOfCrimes(@RequestParam String stopId) throws StopNotFoundException {
+        Coordinate coordinate = busService.getCoordinates(stopId);
+        return new CrimePresenter(crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude())).toJson();
     }
 
     @RequestMapping(path = "/{stopId}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})

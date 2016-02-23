@@ -1,0 +1,7 @@
+{
+  "data" : {
+    "numberOfCrimes" : 4,
+    "mostFrequentCrimeType" : "CAR PROWL",
+    "numberOfViolentCrimes" : 1
+  }
+}

@@ -46,4 +46,11 @@ public class SomeIntegrationTests {
                 json().isEqualTo(TestUtilities.jsonFileToString(
                         "src/test/resources/v1/output/StopsCollectionResponse.json")));
     }
+
+    @Test
+    public void testGetCrimeInfo() throws Exception {
+        mockMvc.perform(get("/api/v1/stops/crime?stopId=1_75403")).andExpect(
+                json().isEqualTo(TestUtilities.jsonFileToString(
+                        "src/test/resources/v1/output/CrimeResponse.json")));
+    }
 }
