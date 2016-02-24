@@ -5,11 +5,9 @@ import com.netflix.hystrix.exception.HystrixRuntimeException;
 import io.pivotal.TestUtilities;
 import io.pivotal.model.Coordinate;
 import io.pivotal.service.BusService;
+import io.pivotal.service.CrimeService;
 import io.pivotal.service.WeatherService;
-import io.pivotal.service.response.DepartureResponse;
-import io.pivotal.service.response.ForecastResponse;
-import io.pivotal.service.response.StopResponse;
-import io.pivotal.service.response.TemperatureResponse;
+import io.pivotal.service.response.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +36,8 @@ public class StopsControllerTest {
     BusService busService;
     @Mock
     WeatherService weatherService;
+    @Mock
+    CrimeService crimeService;
     @InjectMocks
     StopsController subject;
 
@@ -48,8 +48,22 @@ public class StopsControllerTest {
 
     Gson gson = new Gson();
 
+    String stopId = "1_75403";
+    double latitude = 47.6098;
+    double longitude = -122.3332;
+    Coordinate coordinate = new Coordinate(latitude, longitude);
+
     @Before
-    public void setup() {
+    public void setup() throws Exception {
+        List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
+            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1896376792000L, 1896376792000L));
+            add(new DepartureResponse("855", "Lynnwood", 0, 1896376812000L));
+            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 0, 1896376852000L));
+        }};
+        when(busService.getDepartures(stopId)).thenReturn(departureResponses);
+
+        when(busService.getCoordinates(stopId)).thenReturn(coordinate);
+
         this.mockMvc = MockMvcBuilders.standaloneSetup(subject)
                 .apply(documentationConfiguration(this.restDocumentation).uris()
                     .withScheme("http")
@@ -59,17 +73,6 @@ public class StopsControllerTest {
 
     @Test
     public void testGetWeatherBus() throws Exception {
-        String stopId = "1_75403";
-        double latitude = 47.6098;
-        double longitude = -122.3332;
-        Coordinate coordinate = new Coordinate(latitude, longitude);
-
-        List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
-            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1896376792000L, 1896376792000L));
-            add(new DepartureResponse("855", "Lynnwood", 0, 1896376812000L));
-            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 0, 1896376852000L));
-        }};
-
         ForecastResponse forecastResponse = gson.fromJson(
                 TestUtilities.fixtureReader("WeatherServiceForecast"),
                 ForecastResponse.class);
@@ -77,8 +80,6 @@ public class StopsControllerTest {
                 TestUtilities.fixtureReader("WeatherServiceTemp"),
                 TemperatureResponse.class);
 
-        when(busService.getDepartures(stopId)).thenReturn(departureResponses);
-        when(busService.getCoordinates(stopId)).thenReturn(coordinate);
         when(weatherService.getForecast(coordinate)).thenReturn(forecastResponse);
         when(weatherService.getTemperature(coordinate)).thenReturn(temperatureResponse);
 
@@ -92,19 +93,6 @@ public class StopsControllerTest {
 
     @Test
     public void testGetWeatherBusMissingWeather() throws Exception {
-        String stopId = "1_75403";
-        double latitude = 47.6098;
-        double longitude = -122.3332;
-        Coordinate coordinate = new Coordinate(latitude, longitude);
-
-        List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
-            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1896376792000L, 1896376792000L));
-            add(new DepartureResponse("855", "Lynnwood", 0, 1896376812000L));
-            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 0, 1896376852000L));
-        }};
-
-        when(busService.getDepartures(stopId)).thenReturn(departureResponses);
-        when(busService.getCoordinates(stopId)).thenReturn(coordinate);
         when(weatherService.getForecast(coordinate)).thenThrow(HystrixRuntimeException.class);
         when(weatherService.getTemperature(coordinate)).thenThrow(HystrixRuntimeException.class);
 
@@ -118,19 +106,6 @@ public class StopsControllerTest {
 
     @Test(expected = ArithmeticException.class)
     public void testGetWeatherBusRuntimeException() throws Throwable {
-        String stopId = "1_75403";
-        double latitude = 47.6098;
-        double longitude = -122.3332;
-        Coordinate coordinate = new Coordinate(latitude, longitude);
-
-        List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
-            add(new DepartureResponse("31", "CENTRAL MAGNOLIA FREMONT", 1896376792000L, 1896376792000L));
-            add(new DepartureResponse("855", "Lynnwood", 0, 1896376812000L));
-            add(new DepartureResponse("32", "SEATTLE CENTER FREMONT", 0, 1896376852000L));
-        }};
-
-        when(busService.getDepartures(stopId)).thenReturn(departureResponses);
-        when(busService.getCoordinates(stopId)).thenReturn(coordinate);
         when(weatherService.getForecast(coordinate)).thenThrow(ArithmeticException.class);
         when(weatherService.getTemperature(coordinate)).thenThrow(ArithmeticException.class);
 
@@ -143,15 +118,13 @@ public class StopsControllerTest {
 
     @Test
     public void testGetStopsForCoordinate() throws Exception {
-        double latitude = 47.653435;
-        double longitude = -122.305641;
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
         List<StopResponse> stops = new ArrayList<StopResponse>() {{
             add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164, "S"));
             add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195, "S"));
         }};
-        when(busService.getStops(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
+        when(busService.getStops(coordinate, latitudeSpan, longitudeSpan))
                 .thenReturn(stops);
 
         mockMvc.perform(get("/api/v1/stops?lat=" + latitude + "&lng=" + longitude + "&latSpan=" + latitudeSpan + "&lngSpan=" + longitudeSpan))
@@ -179,6 +152,17 @@ public class StopsControllerTest {
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsCollectionResponse.json")))
                 .andDo(document(
                         "stopsCollectionDefaultParams",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
+    @Test
+    public void testGetNumberOfCrimes() throws Exception {
+        when(crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude())).thenReturn(new CrimeInfo(4, "CAR PROWL", 1));
+        mockMvc.perform(get("/api/v1/stops/crime?stopId=" + stopId))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/CrimeResponse.json")))
+                .andDo(document(
+                        "crime",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())));
     }

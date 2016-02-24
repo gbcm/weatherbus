@@ -38,6 +38,9 @@ weatherbus-weather:
 weatherbus-bus:
   ribbon:
     listOfServers: weatherbus-bus-dev.cfapps.io:80
+weatherbus-crime:
+  ribbon:
+    listOfServers: weatherbus-crime-dev.cfapps.io:80
 
 ---
 spring:
