@@ -15,7 +15,7 @@ public class CrimeService {
     }
 
     public CrimeInfo getCrimeInfo(double latitude, double longitude) {
-        CrimeResponse crimeInfo = crimeService.getCrimeInfo(latitude,longitude);
-        return crimeInfo.getData();
+        CrimeResponse crimeResponse = crimeService.getCrimeInfo(latitude,longitude);
+        return crimeResponse.getData();
     }
 }

@@ -158,7 +158,11 @@ public class StopsControllerTest {
 
     @Test
     public void testGetNumberOfCrimes() throws Exception {
-        when(crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude())).thenReturn(new CrimeInfo(4, "CAR PROWL", 1));
+        List<CrimeInfo.Offense> offenses = new ArrayList<>();
+        offenses.add(new CrimeInfo.Offense("CAR PROWL", 2));
+        offenses.add(new CrimeInfo.Offense("STOLEN PROPERTY", 1));
+        offenses.add(new CrimeInfo.Offense("RECKLESS BURNING", 1));
+        when(crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude())).thenReturn(new CrimeInfo(4, "CAR PROWL", 1, offenses));
         mockMvc.perform(get("/api/v1/stops/crime?stopId=" + stopId))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/CrimeResponse.json")))
                 .andDo(document(

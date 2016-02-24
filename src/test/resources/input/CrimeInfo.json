@@ -2,6 +2,20 @@
   "data" : {
     "numberOfCrimes" : 4,
     "mostFrequentCrimeType" : "CAR PROWL",
-    "numberOfViolentCrimes" : 1
+    "numberOfViolentCrimes" : 1,
+    "offenses" : [
+      {
+        "name" : "CAR PROWL",
+        "frequency" : 2
+      },
+      {
+        "name" : "STOLEN PROPERTY",
+        "frequency" : 1
+      },
+      {
+        "name" : "RECKLESS BURNING",
+        "frequency" : 1
+      }
+    ]
   }
 }
