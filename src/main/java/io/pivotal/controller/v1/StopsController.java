@@ -7,12 +7,12 @@ import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
 import io.pivotal.service.CrimeService;
 import io.pivotal.service.WeatherService;
-import io.pivotal.service.response.*;
+import io.pivotal.service.response.DepartureResponse;
+import io.pivotal.service.response.ForecastResponse;
+import io.pivotal.service.response.StopResponse;
+import io.pivotal.service.response.TemperatureResponse;
 import io.pivotal.view.WeatherBusPresenter;
-import io.pivotal.view.v1.CrimePresenter;
-import io.pivotal.view.v1.StopPresenter;
-import io.pivotal.view.v1.StopsCollectionPresenter;
-import io.pivotal.view.v1.StopsObjectPresenter;
+import io.pivotal.view.v1.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -54,6 +54,14 @@ public class StopsController {
         }
 
         return new StopsCollectionPresenter(presenters).toJson();
+    }
+
+    @RequestMapping(path = "/single/{stopId}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    public
+    @ResponseBody
+    String getSingleStop(@PathVariable String stopId) throws UnknownServiceException, StopNotFoundException {
+        StopResponse stop = busService.getStopInfo(stopId);
+        return new SingleStopPresenter(new StopPresenter(stop)).toJson();
     }
 
     @RequestMapping(path = "/crime", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})

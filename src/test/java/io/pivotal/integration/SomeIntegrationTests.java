@@ -37,7 +37,7 @@ public class SomeIntegrationTests {
     public void testGetWB() throws Exception {
         mockMvc.perform(get("/api/v1/stops/1_75403")).andExpect(
                 json().isEqualTo(TestUtilities.jsonFileToString(
-                        "src/test/resources/v1/output/StopsObjectResponse.json")));
+                        "src/test/resources/v1/output/DeparturesResponse.json")));
     }
 
     @Test

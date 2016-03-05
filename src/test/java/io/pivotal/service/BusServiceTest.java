@@ -118,4 +118,18 @@ public class BusServiceTest {
 
         assertEquals(expected, subject.getStops(coordinate,latSpan,lngSpan));
     }
+
+    @Test
+    public void testGetStopInfo() throws Exception {
+        final String stopId = "1_75403";
+
+        SingleStopResponse stopResponse = gson.fromJson(
+                TestUtilities.fixtureReader("StopInfo"),
+                SingleStopResponse.class);
+        when(mockService.getStopForId(stopId)).thenReturn(stopResponse);
+
+        StopResponse expected = new StopResponse(stopId, "The name of the stop", 47.6098, -122.3332, "S");
+
+        assertEquals(subject.getStopInfo(stopId), expected);
+    }
 }

@@ -54,4 +54,12 @@ public class BusService {
     }
 
 
+    public StopResponse getStopInfo(String stopId) throws StopNotFoundException {
+        try {
+            SingleStopResponse ssr = busService.getStopForId(stopId);
+            return ssr.getData();
+        } catch (HystrixRuntimeException e) {
+            throw new StopNotFoundException();
+        }
+    }
 }

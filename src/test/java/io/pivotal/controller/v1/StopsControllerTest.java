@@ -84,7 +84,22 @@ public class StopsControllerTest {
         when(weatherService.getTemperature(coordinate)).thenReturn(temperatureResponse);
 
         mockMvc.perform(get("/api/v1/stops/" + stopId))
-                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsObjectResponse.json")))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/DeparturesResponse.json")))
+                .andDo(document(
+                        "stopsObject",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
+    @Test
+    public void testStopSummary() throws Exception {
+
+        StopResponse stop = new StopResponse(stopId, "15th Ave NE & NE 40th St", 47.655048, -122.312195, "S");
+
+        when(busService.getStopInfo(stopId)).thenReturn(stop);
+
+        mockMvc.perform(get("/api/v1/stops/single/" + stopId))
+                .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/SingleStopResponse.json")))
                 .andDo(document(
                         "stopsObject",
                         preprocessRequest(prettyPrint()),
