@@ -4,6 +4,22 @@
     "name": "The name of the stop",
     "latitude": 47.6098,
     "longitude": -122.3332,
-    "direction": "S"
+    "direction": "S",
+    "routeIds": [
+      "1_100140",
+      "29_880"
+    ]
+  },
+  "included": {
+    "routes" : [
+      {
+        "id": "1_100140",
+        "shortName": "25"
+      },
+      {
+        "id": "29_880",
+        "shortName": "880"
+      }
+    ]
   }
 }
