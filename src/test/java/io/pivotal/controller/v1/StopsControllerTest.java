@@ -53,6 +53,8 @@ public class StopsControllerTest {
     double longitude = -122.3332;
     Coordinate coordinate = new Coordinate(latitude, longitude);
 
+    private StopsCollectionResponse stopsCollectionResponse;
+
     @Before
     public void setup() throws Exception {
         List<DepartureResponse> departureResponses = new ArrayList<DepartureResponse>() {{
@@ -63,6 +65,26 @@ public class StopsControllerTest {
         when(busService.getDepartures(stopId)).thenReturn(departureResponses);
 
         when(busService.getCoordinates(stopId)).thenReturn(coordinate);
+
+        List<StopResponse> stops = new ArrayList<StopResponse>() {{
+            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164, "S", new ArrayList<String>() {{
+                add("1_100223");
+                add("40_100451");
+                add("40_586");
+            }}));
+            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195, "S", new ArrayList<String>() {{
+                add("1_100140");
+                add("1_100223");
+                add("40_586");
+            }}));
+        }};
+
+        stopsCollectionResponse = new StopsCollectionResponse(stops, new StopReferences(new ArrayList<StopReferences.RouteReference>() {{
+            add(new StopReferences.RouteReference("1_100223","43"));
+            add(new StopReferences.RouteReference("1_100140","25"));
+            add(new StopReferences.RouteReference("40_100451","556"));
+            add(new StopReferences.RouteReference("40_586","586"));
+        }}));
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(subject)
                 .apply(documentationConfiguration(this.restDocumentation).uris()
@@ -92,11 +114,17 @@ public class StopsControllerTest {
     }
 
     @Test
-    public void testStopSummary() throws Exception {
+    public void testGetSingleStop() throws Exception {
 
-        StopResponse stop = new StopResponse(stopId, "15th Ave NE & NE 40th St", 47.655048, -122.312195, "S");
+        StopResponse stop = new StopResponse(stopId, "15th Ave NE & NE 40th St", 47.655048, -122.312195, "S", new ArrayList<String>() {{
+            add("1_100140");
+            add("29_880");
+        }});
 
-        when(busService.getStopInfo(stopId)).thenReturn(stop);
+        when(busService.getStopInfo(stopId)).thenReturn(new SingleStopResponse(stop, new StopReferences(new ArrayList<StopReferences.RouteReference>() {{
+            add(new StopReferences.RouteReference("1_100140","25"));
+            add(new StopReferences.RouteReference("29_880","880"));
+        }})));
 
         mockMvc.perform(get("/api/v1/stops/single/" + stopId))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/SingleStopResponse.json")))
@@ -135,12 +163,8 @@ public class StopsControllerTest {
     public void testGetStopsForCoordinate() throws Exception {
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
-        List<StopResponse> stops = new ArrayList<StopResponse>() {{
-            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164, "S"));
-            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195, "S"));
-        }};
         when(busService.getStops(coordinate, latitudeSpan, longitudeSpan))
-                .thenReturn(stops);
+                .thenReturn(stopsCollectionResponse);
 
         mockMvc.perform(get("/api/v1/stops?lat=" + latitude + "&lng=" + longitude + "&latSpan=" + latitudeSpan + "&lngSpan=" + longitudeSpan))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsCollectionResponse.json")))
@@ -156,12 +180,8 @@ public class StopsControllerTest {
         double longitude = -122.305641;
         double latitudeSpan = 0.01;
         double longitudeSpan = 0.01;
-        List<StopResponse> stops = new ArrayList<StopResponse>() {{
-            add(new StopResponse("1_10914", "15th Ave NE & NE Campus Pkwy", 47.656422, -122.312164, "S"));
-            add(new StopResponse("1_10917","15th Ave NE & NE 40th St",47.655048,-122.312195, "S"));
-        }};
         when(busService.getStops(new Coordinate(latitude, longitude), latitudeSpan, longitudeSpan))
-                .thenReturn(stops);
+                .thenReturn(stopsCollectionResponse);
 
         mockMvc.perform(get("/api/v1/stops"))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/StopsCollectionResponse.json")))

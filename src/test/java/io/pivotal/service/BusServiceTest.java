@@ -102,19 +102,35 @@ public class BusServiceTest {
                 latSpan,
                 lngSpan))
                 .thenReturn(response);
-        List<StopResponse> expected = new ArrayList<>();
-        expected.add(new StopResponse(
-                "1_10914",
-                "15th Ave NE & NE Campus Pkwy",
-                47.656422,
-                -122.312164,
-                "S"));
-        expected.add(new StopResponse(
-                "1_10917",
-                "15th Ave NE & NE 40th St",
-                47.655048,
-                -122.312195,
-                "S"));
+        StopsCollectionResponse expected = new StopsCollectionResponse(new ArrayList<StopResponse>() {{
+            add(new StopResponse(
+                    "1_10914",
+                    "15th Ave NE & NE Campus Pkwy",
+                    47.656422,
+                    -122.312164,
+                    "S",
+                    new ArrayList<String>() {{
+                        add("1_100223");
+                        add("40_100451");
+                        add("40_586");
+                    }}));
+            add(new StopResponse(
+                    "1_10917",
+                    "15th Ave NE & NE 40th St",
+                    47.655048,
+                    -122.312195,
+                    "S",
+                    new ArrayList<String>() {{
+                        add("1_100140");
+                        add("1_100223");
+                        add("40_586");
+                    }}));
+        }}, new StopReferences(new ArrayList<StopReferences.RouteReference>() {{
+            add(new StopReferences.RouteReference("1_100223","43"));
+            add(new StopReferences.RouteReference("1_100140","25"));
+            add(new StopReferences.RouteReference("40_100451","556"));
+            add(new StopReferences.RouteReference("40_586","586"));
+        }}));
 
         assertEquals(expected, subject.getStops(coordinate,latSpan,lngSpan));
     }
@@ -128,8 +144,16 @@ public class BusServiceTest {
                 SingleStopResponse.class);
         when(mockService.getStopForId(stopId)).thenReturn(stopResponse);
 
-        StopResponse expected = new StopResponse(stopId, "The name of the stop", 47.6098, -122.3332, "S");
+        SingleStopResponse expected = new SingleStopResponse(
+                new StopResponse(stopId, "The name of the stop", 47.6098, -122.3332, "S", new ArrayList<String>() {{
+                    add("1_100140");
+                    add("29_880");
+                }}),
+                new StopReferences(new ArrayList<StopReferences.RouteReference>() {{
+                    add(new StopReferences.RouteReference("1_100140", "25"));
+                    add(new StopReferences.RouteReference("29_880", "880"));
+                }}));
 
-        assertEquals(subject.getStopInfo(stopId), expected);
+        assertEquals(expected, subject.getStopInfo(stopId));
     }
 }

@@ -4,6 +4,22 @@
     "name": "15th Ave NE & NE 40th St",
     "latitude": 47.655048,
     "longitude": -122.312195,
-    "direction": "S"
+    "direction": "S",
+    "routeIds": [
+      "1_100140",
+      "29_880"
+    ]
+  },
+  "included": {
+    "routes" : [
+      {
+        "id": "1_100140",
+        "shortName": "25"
+      },
+      {
+        "id": "29_880",
+        "shortName": "880"
+      }
+    ]
   }
 }

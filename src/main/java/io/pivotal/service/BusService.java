@@ -5,7 +5,7 @@ import io.pivotal.errorHandling.StopNotFoundException;
 import io.pivotal.model.Coordinate;
 import io.pivotal.service.response.DepartureResponse;
 import io.pivotal.service.response.SingleStopResponse;
-import io.pivotal.service.response.StopResponse;
+import io.pivotal.service.response.StopsCollectionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,22 +42,20 @@ public class BusService {
         }
     }
 
-    public List<StopResponse> getStops(Coordinate coord,
-                                       double latSpan,
-                                       double lngSpan) {
+    public StopsCollectionResponse getStops(Coordinate coord,
+                                            double latSpan,
+                                            double lngSpan) {
         return busService.getStops(
                 coord.getLatitude(),
                 coord.getLongitude(),
                 latSpan,
-                lngSpan)
-                .getData();
+                lngSpan);
     }
 
 
-    public StopResponse getStopInfo(String stopId) throws StopNotFoundException {
+    public SingleStopResponse getStopInfo(String stopId) throws StopNotFoundException {
         try {
-            SingleStopResponse ssr = busService.getStopForId(stopId);
-            return ssr.getData();
+            return busService.getStopForId(stopId);
         } catch (HystrixRuntimeException e) {
             throw new StopNotFoundException();
         }

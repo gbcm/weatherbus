@@ -3,6 +3,8 @@ package io.pivotal.view.v1;
 import io.pivotal.service.response.StopResponse;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class StopPresenter {
     private String id;
@@ -10,6 +12,7 @@ public class StopPresenter {
     private double latitude;
     private double longitude;
     private String direction;
+    private List<String> routeIds;
 
     public StopPresenter(StopResponse stop){
         id = stop.getStopId();
@@ -17,5 +20,6 @@ public class StopPresenter {
         latitude = stop.getLatitude();
         longitude = stop.getLongitude();
         direction = stop.getDirection();
+        routeIds = stop.getRouteIds();
     }
 }

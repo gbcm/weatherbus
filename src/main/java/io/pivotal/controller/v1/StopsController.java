@@ -7,10 +7,7 @@ import io.pivotal.model.DepartureWithTemperature;
 import io.pivotal.service.BusService;
 import io.pivotal.service.CrimeService;
 import io.pivotal.service.WeatherService;
-import io.pivotal.service.response.DepartureResponse;
-import io.pivotal.service.response.ForecastResponse;
-import io.pivotal.service.response.StopResponse;
-import io.pivotal.service.response.TemperatureResponse;
+import io.pivotal.service.response.*;
 import io.pivotal.view.WeatherBusPresenter;
 import io.pivotal.view.v1.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,22 +43,22 @@ public class StopsController {
             @RequestParam(name = "latSpan", required = false, defaultValue = "0.01") double latSpan,
             @RequestParam(name = "lngSpan", required = false, defaultValue = "0.01") double lngSpan)
             throws UnknownServiceException {
-        List<StopResponse> stops = busService.getStops(new Coordinate(lat, lng), latSpan, lngSpan);
+        StopsCollectionResponse response = busService.getStops(new Coordinate(lat, lng), latSpan, lngSpan);
         List<StopPresenter> presenters = new ArrayList<>();
 
-        for (StopResponse stop : stops) {
+        for (StopResponse stop : response.getData()) {
             presenters.add(new StopPresenter(stop));
         }
 
-        return new StopsCollectionPresenter(presenters).toJson();
+        return new StopsCollectionPresenter(presenters, response.getIncluded()).toJson();
     }
 
     @RequestMapping(path = "/single/{stopId}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public
     @ResponseBody
     String getSingleStop(@PathVariable String stopId) throws UnknownServiceException, StopNotFoundException {
-        StopResponse stop = busService.getStopInfo(stopId);
-        return new SingleStopPresenter(new StopPresenter(stop)).toJson();
+        SingleStopResponse response = busService.getStopInfo(stopId);
+        return new SingleStopPresenter(new StopPresenter(response.getData()), response.getIncluded()).toJson();
     }
 
     @RequestMapping(path = "/crime", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
