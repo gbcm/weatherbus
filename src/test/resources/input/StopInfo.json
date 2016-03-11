@@ -14,10 +14,12 @@
     "routes" : [
       {
         "id": "1_100140",
+        "longName": "",
         "shortName": "25"
       },
       {
         "id": "29_880",
+        "longName": "Mukilteo - University District",
         "shortName": "880"
       }
     ]

@@ -80,10 +80,10 @@ public class StopsControllerTest {
         }};
 
         stopsCollectionResponse = new StopsCollectionResponse(stops, new StopReferences(new ArrayList<StopReferences.RouteReference>() {{
-            add(new StopReferences.RouteReference("1_100223","43"));
-            add(new StopReferences.RouteReference("1_100140","25"));
-            add(new StopReferences.RouteReference("40_100451","556"));
-            add(new StopReferences.RouteReference("40_586","586"));
+            add(new StopReferences.RouteReference("1_100223","43", ""));
+            add(new StopReferences.RouteReference("1_100140","25", ""));
+            add(new StopReferences.RouteReference("40_100451","556", "Issaquah - Northgate"));
+            add(new StopReferences.RouteReference("40_586","586", "Tacoma - U. District"));
         }}));
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(subject)
@@ -122,8 +122,8 @@ public class StopsControllerTest {
         }});
 
         when(busService.getStopInfo(stopId)).thenReturn(new SingleStopResponse(stop, new StopReferences(new ArrayList<StopReferences.RouteReference>() {{
-            add(new StopReferences.RouteReference("1_100140","25"));
-            add(new StopReferences.RouteReference("29_880","880"));
+            add(new StopReferences.RouteReference("1_100140","25", ""));
+            add(new StopReferences.RouteReference("29_880","880", "Mukilteo - University District"));
         }})));
 
         mockMvc.perform(get("/api/v1/stops/single/" + stopId))

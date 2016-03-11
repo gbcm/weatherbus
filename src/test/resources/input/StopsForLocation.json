@@ -29,18 +29,22 @@
     "routes" : [
       {
         "id": "1_100223",
+        "longName": "",
         "shortName": "43"
       },
       {
         "id": "1_100140",
+        "longName": "",
         "shortName": "25"
       },
       {
         "id": "40_100451",
+        "longName": "Issaquah - Northgate",
         "shortName": "556"
       },
       {
         "id": "40_586",
+        "longName": "Tacoma - U. District",
         "shortName": "586"
       }
     ]

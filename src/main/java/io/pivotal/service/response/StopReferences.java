@@ -18,12 +18,14 @@ public class StopReferences {
     static public class RouteReference {
         private String id;
         private String shortName;
+        private String longName;
 
         public RouteReference() {}
 
-        public RouteReference(String id, String shortName) {
+        public RouteReference(String id, String shortName, String longName) {
             this.id = id;
             this.shortName = shortName;
+            this.longName = longName;
         }
     }
 }
