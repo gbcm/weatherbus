@@ -9,10 +9,9 @@ To get started:
 	* Select Project Settings/Project on the left
 	* Change the project language level to at least 8.
 3. Tell IntelliJ how to run it:
-	* Right click and run application class
-	* Run -> Edit Configurations, Select application class
-	* Remove intellij 'make' command
-	* Add gradle task 'assemble'
+	* IntelliJ -> Preferences
+	* Build, Execution, Deployment -> Annotation Processors
+	* Check “Enable annotation processing”
 4. Tell compiler that lombok is a thing 
 	* Preferences -> Plugins -> Install
 	* Install lombok plugin
