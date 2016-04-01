@@ -64,9 +64,12 @@ public class StopsController {
     @RequestMapping(path = "/crime", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public
     @ResponseBody
-    String getNumberOfCrimes(@RequestParam String stopId) throws StopNotFoundException {
+    CrimeResponse getNumberOfCrimes(@RequestParam String stopId) throws StopNotFoundException {
         Coordinate coordinate = busService.getCoordinates(stopId);
-        return new CrimePresenter(crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude())).toJson();
+        CrimeDetail crimeDetail = crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude());
+        CrimeResponse response = new CrimeResponse();
+        response.setData(crimeDetail);
+        return response;
     }
 
     @RequestMapping(path = "/{stopId}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})

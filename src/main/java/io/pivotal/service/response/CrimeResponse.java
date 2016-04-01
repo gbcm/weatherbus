@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class CrimeResponse {
-    private CrimeInfo data;
+    private CrimeDetail data;
 }

@@ -97,7 +97,7 @@ public class TestConfig {
             public CrimeResponse getCrimeInfo(@RequestParam("lat") double latitude, @RequestParam("lng") double longitude) {
                 try {
                     return gson.fromJson(
-                            TestUtilities.fixtureReader("CrimeInfo"),
+                            TestUtilities.fixtureReader("CrimeDetail"),
                             CrimeResponse.class);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

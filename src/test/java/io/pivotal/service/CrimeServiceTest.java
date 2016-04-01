@@ -2,7 +2,7 @@ package io.pivotal.service;
 
 import com.google.gson.Gson;
 import io.pivotal.TestUtilities;
-import io.pivotal.service.response.CrimeInfo;
+import io.pivotal.service.response.CrimeDetail;
 import io.pivotal.service.response.CrimeResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,22 +25,29 @@ public class CrimeServiceTest {
     @InjectMocks
     CrimeService subject;
 
-    Gson gson = new Gson();
+    private Gson gson = new Gson();
 
     @Test
     public void testGetCrimeInfo() throws Exception {
-        List<CrimeInfo.Offense> offenses = new ArrayList<>();
-
-        offenses.add(new CrimeInfo.Offense("CAR PROWL", 2));
-        offenses.add(new CrimeInfo.Offense("STOLEN PROPERTY", 1));
-        offenses.add(new CrimeInfo.Offense("RECKLESS BURNING", 1));
-
         CrimeResponse response = gson.fromJson(
-                TestUtilities.fixtureReader("CrimeInfo"),
+                TestUtilities.fixtureReader("CrimeDetail"),
                 CrimeResponse.class);
+
+        CrimeDetail expected = new CrimeDetail("all", 8, "DISPUTE", new ArrayList<CrimeDetail>() {{
+            add(new CrimeDetail("violent", 3, "ASSAULT", new ArrayList<CrimeDetail>() {{
+                add(new CrimeDetail("HOMICIDE", 1, null, null));
+                add(new CrimeDetail("ASSAULT", 2, null, null));
+            }}));
+            add(new CrimeDetail("regular", 1, "PICKPOCKET", new ArrayList<CrimeDetail>() {{
+                add(new CrimeDetail("PICKPOCKET", 1, null, null));
+            }}));
+            add(new CrimeDetail("mild", 4, "DISPUTE", new ArrayList<CrimeDetail>() {{
+                add(new CrimeDetail("DISPUTE", 4, null, null));
+            }}));
+        }});
+
         when(service.getCrimeInfo(10,15)).thenReturn(response);
 
-        CrimeInfo expected = new CrimeInfo(4, "CAR PROWL", 1, offenses);
         assertEquals(expected, subject.getCrimeInfo(10,15));
     }
 }

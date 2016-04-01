@@ -193,11 +193,21 @@ public class StopsControllerTest {
 
     @Test
     public void testGetNumberOfCrimes() throws Exception {
-        List<CrimeInfo.Offense> offenses = new ArrayList<>();
-        offenses.add(new CrimeInfo.Offense("CAR PROWL", 2));
-        offenses.add(new CrimeInfo.Offense("STOLEN PROPERTY", 1));
-        offenses.add(new CrimeInfo.Offense("RECKLESS BURNING", 1));
-        when(crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude())).thenReturn(new CrimeInfo(4, "CAR PROWL", 1, offenses));
+        CrimeDetail response = new CrimeDetail("all", 8, "DISPUTE", new ArrayList<CrimeDetail>() {{
+            add(new CrimeDetail("violent", 3, "ASSAULT", new ArrayList<CrimeDetail>() {{
+                add(new CrimeDetail("HOMICIDE", 1, null, null));
+                add(new CrimeDetail("ASSAULT", 2, null, null));
+            }}));
+            add(new CrimeDetail("regular", 1, "PICKPOCKET", new ArrayList<CrimeDetail>() {{
+                add(new CrimeDetail("PICKPOCKET", 1, null, null));
+            }}));
+            add(new CrimeDetail("mild", 4, "DISPUTE", new ArrayList<CrimeDetail>() {{
+                add(new CrimeDetail("DISPUTE", 4, null, null));
+            }}));
+        }});
+
+        when(crimeService.getCrimeInfo(coordinate.getLatitude(), coordinate.getLongitude())).thenReturn(response);
+
         mockMvc.perform(get("/api/v1/stops/crime?stopId=" + stopId))
                 .andExpect(json().isEqualTo(TestUtilities.jsonFileToString("src/test/resources/v1/output/CrimeResponse.json")))
                 .andDo(document(

@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("weatherbus-crime")
 @RequestMapping("/api")
 public interface IFeignCrimeService {
-    @RequestMapping(method = RequestMethod.GET, value = "/info", consumes = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/detail", consumes = "application/json")
     CrimeResponse getCrimeInfo(@RequestParam("lat") double latitude, @RequestParam("lng") double longitude);
 }
