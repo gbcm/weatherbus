@@ -41,10 +41,8 @@ work.)
     3. Check "Enable annotation processing"
 
 Development:
-1. If you want to develop against weatherbus-weather locally:
-	* In Constants.java, set WEATHER_SERVICE_ENDPOINT to "http://localhost:9090/api"
-	* git clone https://github.com/gbcm/weatherbus-weather.git
-	* Open and run weatherbus-weather in IntelliJ
+1. To see or change the expected URLs of other services, look at the default
+   profile in application.yml.
 2. There are some local tools to aid development in the tools directory.
 
 Documentation:

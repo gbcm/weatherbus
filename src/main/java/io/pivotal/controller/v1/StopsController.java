@@ -85,6 +85,7 @@ public class StopsController {
             temperatureResponse = weatherService.getTemperature(coordinate);
             forecastResponse = weatherService.getForecast(coordinate);
         } catch (HystrixRuntimeException e) {
+            e.printStackTrace();
         }
 
         List<DepartureWithTemperature> dwt = getDepartureWithTemperatures(departureResponses, temperatureResponse, forecastResponse);
